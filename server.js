@@ -8,16 +8,20 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
 const authRoutes = require("./routes/authRoutes");
-app.use("/api/auth", authRoutes);
-
+const gameRoutes = require("./routes/gameRoutes");
+const moduleRoutes = require("./routes/moduleRoutes");
+const rewardRoutes = require("./routes/rewardRoutes");
 
 const authenticate = require("./middlewares/authenticate");
 app.get("/api/protected", authenticate, (req, res) => {
   res.json({ message: `Hello user ${req.user.id}`, user: req.user });
 });
 
+app.use("/api/auth", authRoutes);
+app.use("/api/game", gameRoutes);
+app.use("/api/ai", moduleRoutes);
+app.use("/api", rewardRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
