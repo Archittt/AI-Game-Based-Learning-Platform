@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
       highContrast: { type: Boolean, default: false }
     }
   }
-}); { timestamps: true });
+}, { timestamps: true });
 
 // Indexes
 userSchema.index({ email: 1 }, { unique: true });
