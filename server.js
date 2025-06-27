@@ -16,7 +16,6 @@ const authRoutes = require("./routes/authRoutes");
 const gameRoutes = require("./routes/gameRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
 const rewardRoutes = require("./routes/rewardRoutes");
-
 const authenticate = require("./middlewares/authenticate");
 
 // Test protected route
