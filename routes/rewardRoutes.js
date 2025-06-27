@@ -5,22 +5,33 @@ const Reward = require("../models/Reward");
 
 router.post("/rewards", authenticate, async (req, res) => {
   try {
-    const { points, badge } = req.body;
     const userId = req.user.id;
+    const {
+      type,
+      name,
+      description,
+      points,
+      icon,
+      moduleId,
+      challengeId
+    } = req.body;
 
-    const reward = await Reward.findOneAndUpdate(
-      { userId },
-      {
-        $inc: { points: points || 0 },
-        $addToSet: { badges: badge },
-        lastUpdated: new Date()
-      },
-      { new: true, upsert: true }
-    );
+    const newReward = new Reward({
+      userId,
+      type,
+      name,
+      description,
+      points,
+      icon,
+      moduleId,
+      challengeId
+    });
 
-    res.status(200).json({ success: true, data: reward });
+    await newReward.save();
+
+    res.status(201).json({ success: true, data: newReward });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Error creating reward:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
