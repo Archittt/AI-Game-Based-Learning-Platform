@@ -7,10 +7,12 @@ const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
 
 // Registration endpoint
 exports.register = async (req, res) => {
-  const { email, password, name } = req.body;
-  if (!email || !password || !name) {
-    return res.status(400).json({ success: false, message: "Name, email, and password are required." });
+  const { email, password, name, role, grade } = req.body;
+
+  if (!email || !password || !name || !role) {
+    return res.status(400).json({ success: false, message: "Name, email, password, and role are required." });
   }
+
   try {
     const existing = await User.findOne({ email: email.toLowerCase().trim() });
     if (existing) {
@@ -20,14 +22,14 @@ exports.register = async (req, res) => {
     const salt = await bcrypt.genSalt(SALT_ROUNDS);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    
     const newUser = await User.create({
       email: email.toLowerCase().trim(),
       passwordHash,
       name: name.trim(),
+      role,
+      grade
     });
 
-  
     const token = generateToken({ userId: newUser._id, role: newUser.role });
 
     res.status(201).json({
@@ -39,13 +41,14 @@ exports.register = async (req, res) => {
         name: newUser.name,
         role: newUser.role
       },
-      token  
+      token
     });
   } catch (err) {
     console.error("Register error:", err);
     res.status(500).json({ success: false, message: "Server error." });
   }
 };
+
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
