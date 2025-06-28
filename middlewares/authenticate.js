@@ -1,4 +1,3 @@
-
 const { verifyToken } = require("../utils/jwtUtils");
 
 module.exports = (req, res, next) => {
