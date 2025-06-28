@@ -16,6 +16,7 @@ const authRoutes = require("./routes/authRoutes");
 const gameRoutes = require("./routes/gameRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
 const rewardRoutes = require("./routes/rewardRoutes");
+const quizChallengeRoutes = require('./routes/quizChallengeRoutes');
 const authenticate = require("./middlewares/authenticate");
 
 // Test protected route
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/game", gameRoutes);
 app.use("/api/ai", moduleRoutes);
 app.use("/api", rewardRoutes);
+app.use('/api/quiz', quizChallengeRoutes);
 
 // Create HTTP server and initialize Socket.IO
 const server = http.createServer(app);
@@ -66,3 +68,4 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => {
     console.error("MongoDB connection error:", err);
   });
+  
