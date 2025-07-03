@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI For All - Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="signup.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361EE',
+                        secondary: '#3CCFCF',
+                        accent: '#FFC857',
+                        success: '#06D6A0',
+                        warning: '#FF5A5F',
+                        purple: '#7209B7',
+                        background: '#F8F9FA'
+                    },
+                    fontFamily: {
+                        nunito: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+   
+</head>
+<body>
+    <div class="signup-card">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+            </div>
+            <h1 class="text-xl font-bold">AI For All</h1>
+        </div>
+        
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Create Your Account</h2>
+        <p class="text-gray-600 mb-6">Join our community of young AI enthusiasts</p>
+        
+        <form id="signup-form">
+            <div class="form-row">
+                <div class="form-group w-full">
+                    <label for="first-name" class="form-label">First Name</label>
+                    <input type="text" id="first-name" class="form-input" placeholder="Enter your first name" required>
+                    <div id="first-name-error" class="error-message hidden"></div>
+                </div>
+                
+                <div class="form-group w-full">
+                    <label for="last-name" class="form-label">Last Name</label>
+                    <input type="text" id="last-name" class="form-input" placeholder="Enter your last name" required>
+                    <div id="last-name-error" class="error-message hidden"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                <div id="email-error" class="error-message hidden"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="grade" class="form-label">Grade Level</label>
+                <select id="grade" class="form-input" required>
+                    <option value="" disabled selected>Select your grade</option>
+                    
+                    <option value="5">Grade 5</option>
+                    <option value="6">Grade 6</option>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                    <option value="10">Grade 10</option>
+                    
+                </select>
+                <div id="grade-error" class="error-message hidden"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <div class="relative">
+                    <input type="password" id="password" class="form-input" placeholder="Create a password" required>
+                    <span class="toggle-password" id="toggle-password">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </span>
+                </div>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="password-strength-bar"></div>
+                </div>
+                <div class="password-tips" id="password-tips">Password should be at least 8 characters</div>
+                <div id="password-error" class="error-message hidden"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm-password" class="form-label">Confirm Password</label>
+                <div class="relative">
+                    <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your password" required>
+                    <span class="toggle-password" id="toggle-confirm-password">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </span>
+                </div>
+                <div id="confirm-password-error" class="error-message hidden"></div>
+            </div>
+            
+            <div class="terms">
+                <input type="checkbox" id="terms" class="rounded text-primary focus:ring-primary" required>
+                <label for="terms">
+                    I agree to the <a href="#" class="text-primary font-semibold">Terms of Service</a> and <a href="#" class="text-primary font-semibold">Privacy Policy</a>. I understand AI Explorers will process my data as described in the Privacy Policy.
+                </label>
+            </div>
+            
+            <button type="submit" class="signup-btn" id="signup-button">Create Account</button>
+        </form>
+        
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">OR</span>
+            <div class="divider-line"></div>
+        </div>
+        
+        <div class="social-signup">
+            <button class="social-btn">
+                <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+            </button>
+            <button class="social-btn">
+                <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill="#1877F2"/>
+                </svg>
+            </button>
+            <button class="social-btn">
+                <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#000000"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="login-link">
+            Already have an account? <a href="#">Log in</a>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle password visibility
+        function setupPasswordToggle(inputId, toggleId) {
+            const togglePassword = document.getElementById(toggleId);
+            const passwordInput = document.getElementById(inputId);
+            
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Change the icon
+                if (type === 'password') {
+                    this.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    `;
+                } else {
+                    this.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        </svg>
+                    `;
+                }
+            });
+        }
+        
+        setupPasswordToggle('password', 'toggle-password');
+        setupPasswordToggle('confirm-password', 'toggle-confirm-password');
+        
+        // Password strength meter
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.getElementById('password-strength-bar');
+        const passwordTips = document.getElementById('password-tips');
+        
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            let tips = [];
+            
+            // Check password length
+            if (password.length >= 8) {
+                strength += 1;
+            } else {
+                tips.push('Password should be at least 8 characters');
+            }
+            
+            // Check for mixed case
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+                strength += 1;
+            } else {
+                tips.push('Add both uppercase and lowercase letters');
+            }
+            
+            // Check for numbers
+            if (password.match(/[0-9]/)) {
+                strength += 1;
+            } else {
+                tips.push('Add at least one number');
+            }
+            
+            // Check for special characters
+            if (password.match(/[^a-zA-Z0-9]/)) {
+                strength += 1;
+            } else {
+                tips.push('Add at least one special character');
+            }
+            
+            // Update the strength bar
+            strengthBar.className = 'password-strength-bar';
+            
+            if (password.length === 0) {
+                strengthBar.style.width = '0';
+                passwordTips.textContent = 'Password should be at least 8 characters';
+            } else {
+                if (strength === 1) {
+                    strengthBar.classList.add('strength-weak');
+                    passwordTips.textContent = tips.join(', ');
+                } else if (strength === 2 || strength === 3) {
+                    strengthBar.classList.add('strength-medium');
+                    passwordTips.textContent = tips.join(', ');
+                } else if (strength === 4) {
+                    strengthBar.classList.add('strength-strong');
+                    passwordTips.textContent = 'Strong password';
+                }
+            }
+        });
+        
+        // Form validation and submission
+        const signupForm = document.getElementById('signup-form');
+        const firstNameInput = document.getElementById('first-name');
+        const lastNameInput = document.getElementById('last-name');
+        const emailInput = document.getElementById('email');
+        const gradeInput = document.getElementById('grade');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const termsCheckbox = document.getElementById('terms');
+        
+        const firstNameError = document.getElementById('first-name-error');
+        const lastNameError = document.getElementById('last-name-error');
+        const emailError = document.getElementById('email-error');
+        const gradeError = document.getElementById('grade-error');
+        const passwordError = document.getElementById('password-error');
+        const confirmPasswordError = document.getElementById('confirm-password-error');
+        
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset all error messages
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(el => {
+                el.textContent = '';
+                el.classList.add('hidden');
+            });
+            
+            const formInputs = document.querySelectorAll('.form-input');
+            formInputs.forEach(input => {
+                input.classList.remove('error');
+            });
+            
+            let isValid = true;
+            
+            // Validate first name
+            if (!firstNameInput.value.trim()) {
+                firstNameError.textContent = 'First name is required';
+                firstNameError.classList.remove('hidden');
+                firstNameInput.classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate last name
+            if (!lastNameInput.value.trim()) {
+                lastNameError.textContent = 'Last name is required';
+                lastNameError.classList.remove('hidden');
+                lastNameInput.classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate email
+            const email = emailInput.value.trim();
+            if (!email) {
+                emailError.textContent = 'Email is required';
+                emailError.classList.remove('hidden');
+                emailInput.classList.add('error');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.classList.remove('hidden');
+                emailInput.classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate grade
+            if (!gradeInput.value) {
+                gradeError.textContent = 'Please select your grade';
+                gradeError.classList.remove('hidden');
+                gradeInput.classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate password
+            const password = passwordInput.value;
+            if (!password) {
+                passwordError.textContent = 'Password is required';
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('error');
+                isValid = false;
+            } else if (password.length < 8) {
+                passwordError.textContent = 'Password must be at least 8 characters';
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate confirm password
+            const confirmPassword = confirmPasswordInput.value;
+            if (!confirmPassword) {
+                confirmPasswordError.textContent = 'Please confirm your password';
+                confirmPasswordError.classList.remove('hidden');
+                confirmPasswordInput.classList.add('error');
+                isValid = false;
+            } else if (confirmPassword !== password) {
+                confirmPasswordError.textContent = 'Passwords do not match';
+                confirmPasswordError.classList.remove('hidden');
+                confirmPasswordInput.classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate terms checkbox
+            if (!termsCheckbox.checked) {
+                isValid = false;
+                alert('Please agree to the Terms of Service and Privacy Policy');
+            }
+            
+            // If validation passes, simulate signup
+            if (isValid) {
+                simulateSignup();
+            }
+        });
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        function simulateSignup() {
+            // Show loading state
+            const signupBtn = document.getElementById('signup-button');
+            const originalText = signupBtn.textContent;
+            signupBtn.textContent = 'Creating Account...';
+            signupBtn.disabled = true;
+            
+            // Collect form data
+            const formData = {
+                firstName: firstNameInput.value.trim(),
+                lastName: lastNameInput.value.trim(),
+                email: emailInput.value.trim(),
+                grade: gradeInput.value,
+                password: passwordInput.value
+            };
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                console.log('Account creation data:', formData);
+                
+                // Success - show success message and redirect
+                alert(`Account created successfully! Welcome to AI Explorers, ${formData.firstName}!`);
+                window.location.href = '#dashboard';
+                
+                // Reset button state (in case redirect doesn't happen)
+                signupBtn.textContent = originalText;
+                signupBtn.disabled = false;
+            }, 1500);
+        }
+        
+        // Clear error when input changes
+        const formInputs = document.querySelectorAll('.form-input');
+        formInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                const errorElement = document.getElementById(`${this.id}-error`);
+                if (errorElement) {
+                    errorElement.textContent = '';
+                    errorElement.classList.add('hidden');
+                }
+                this.classList.remove('error');
+            });
+            
+            // Add focus and blur events for better UX
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('ring-2', 'ring-primary', 'ring-opacity-50');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('ring-2', 'ring-primary', 'ring-opacity-50');
+            });
+        });
+    </script>
+</body>
+</html>

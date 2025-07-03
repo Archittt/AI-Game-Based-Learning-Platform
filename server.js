@@ -17,6 +17,9 @@ const gameRoutes = require("./routes/gameRoutes");
 const moduleRoutes = require("./routes/moduleRoutes");
 const rewardRoutes = require("./routes/rewardRoutes");
 const authenticate = require("./middlewares/authenticate");
+const chatbotRoutes = require("./routes/chatbotRoutes");
+const leaderboardRoutes = require("./routes/leaderboardRoutes");
+const aiIntegrationRoutes = require("./routes/aiIntegrationRoutes");
 
 // Test protected route
 app.get("/api/protected", authenticate, (req, res) => {
@@ -27,6 +30,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/game", gameRoutes);
 app.use("/api/ai", moduleRoutes);
 app.use("/api", rewardRoutes);
+app.use("/api", chatbotRoutes);
+app.use("/api", leaderboardRoutes);
+app.use("/api", aiIntegrationRoutes);
+
+
 
 // Create HTTP server and initialize Socket.IO
 const server = http.createServer(app);
