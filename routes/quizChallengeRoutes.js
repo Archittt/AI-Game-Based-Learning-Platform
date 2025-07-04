@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const quizChallengeController = require('../controllers/quizChallengeController');
@@ -28,10 +27,8 @@ router.post('/:moduleId/challenge/:challengeId/submit', authenticate, async (req
     const quiz = module.challenges.find(ch => ch.challengeId === challengeId && ch.type === 'quiz');
     if (!quiz) throw new Error('Quiz not found');
 
-    // Get total questions (use totalQuestions if defined, else count quiz challenges)
-    const totalQuestions = quiz.totalQuestions || module.challenges.filter(
-      ch => ch.type === 'quiz' && ch.challengeId === challengeId
-    ).length || 1;
+    // Get total questions from AIModule
+    const totalQuestions = quiz.totalQuestions || 1; // Fallback to 1 if not set
 
     // Get all quiz attempts for this challenge
     const quizAttempts = await QuizAttempt.find({
