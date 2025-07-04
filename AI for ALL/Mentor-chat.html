@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for ALL - Mentor Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361EE',
+                        secondary: '#3CCFCF',
+                        accent: '#FFC857',
+                        success: '#06D6A0',
+                        warning: '#FF5A5F',
+                        purple: '#7209B7',
+                        background: '#F8F9FA'
+                    },
+                    fontFamily: {
+                        nunito: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow-x: hidden;
+            background-color: #F8F9FA;
+        }
+        
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item.active {
+            color: #4361EE;
+            font-weight: bold;
+        }
+        
+        .nav-item:hover:not(.active) {
+            color: #3CCFCF;
+        }
+        
+        .high-contrast {
+            filter: contrast(1.5);
+        }
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 180px);
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .chat-sidebar {
+            width: 280px;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+        }
+        
+        .chat-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            max-width: 80%;
+            position: relative;
+        }
+        
+        .message-mentor {
+            background-color: #f1f5f9;
+            padding: 0.75rem;
+            border-radius: 16px 16px 16px 0;
+            align-self: flex-start;
+        }
+        
+        .message-user {
+            background-color: #4361EE;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 16px 16px 0 16px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+        
+        .mentor-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-weight: bold;
+        }
+        
+        .mentor-status {
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border: 2px solid white;
+        }
+        
+        .status-online {
+            background-color: #06D6A0;
+        }
+        
+        .status-offline {
+            background-color: #94a3b8;
+        }
+        
+        .chat-contact {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-contact:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .chat-contact.active {
+            background-color: #e0e7ff;
+        }
+        
+        .chat-contact-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        
+        .chat-contact-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-contact-preview {
+            font-size: 0.875rem;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-contact-time {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+        
+        .chat-contact-badge {
+            background-color: #4361EE;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 0.5rem;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            background-color: #f1f5f9;
+            border-radius: 16px;
+            width: fit-content;
+            margin-bottom: 1rem;
+        }
+        
+        .typing-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background-color: #64748b;
+            margin: 0 0.1rem;
+            animation: typing-animation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing-animation {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .attachment-preview {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+        
+        .attachment-icon {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            margin-right: 0.5rem;
+        }
+        
+        .attachment-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        
+        .attachment-name {
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .attachment-size {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        
+        .attachment-remove {
+            color: #FF5A5F;
+            cursor: pointer;
+        }
+        
+        .emoji-picker {
+            position: absolute;
+            bottom: 70px;
+            right: 20px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 1rem;
+            width: 300px;
+            display: none;
+        }
+        
+        .emoji-picker.active {
+            display: block;
+        }
+        
+        .emoji-categories {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .emoji-category {
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .emoji-category:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .emoji {
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .emoji:hover {
+            background-color: #f1f5f9;
+            transform: scale(1.2);
+        }
+        
+        .resource-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .resource-icon {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e0e7ff;
+            border-radius: 12px;
+            margin-right: 1rem;
+        }
+        
+        .tab {
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+        }
+        
+        .tab.active {
+            background-color: #4361EE;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            animation: modalFadeIn 0.3s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .close-btn {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-btn:hover {
+            color: #4361EE;
+        }
+        
+        .schedule-time {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .schedule-time:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .schedule-time.selected {
+            border-color: #4361EE;
+            background-color: #e0e7ff;
+        }
+        
+        .schedule-time-slot {
+            flex-grow: 1;
+            font-weight: bold;
+        }
+        
+        .schedule-time-status {
+            font-size: 0.875rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+        }
+        
+        .status-available {
+            background-color: #e0f2f1;
+            color: #06D6A0;
+        }
+        
+        .status-booked {
+            background-color: #ffebee;
+            color: #FF5A5F;
+        }
+        
+        @media (max-width: 768px) {
+            .chat-container {
+                height: calc(100vh - 140px);
+            }
+            
+            .chat-sidebar {
+                display: none;
+            }
+            
+            .chat-sidebar.active {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background-color: white;
+                z-index: 10;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar (mobile) -->
+    <nav id="main-nav" class="fixed bottom-0 left-0 w-full bg-white shadow-lg rounded-t-xl z-50 md:hidden">
+        <div class="flex justify-around items-center py-3 px-2">
+            <button class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            <button class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span class="text-xs mt-1">Lessons</span>
+            </button>
+            <button class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+                <span class="text-xs mt-1">Lab</span>
+            </button>
+            <button class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                </svg>
+                <span class="text-xs mt-1">Rewards</span>
+            </button>
+            <button class="nav-item active flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                <span class="text-xs mt-1">Mentor</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Desktop Navigation (sidebar) -->
+    <div id="desktop-nav" class="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white shadow-lg flex-col z-50">
+        <div class="p-6">
+            <div class="flex items-center mb-8">
+                <div class="bg-primary rounded-lg p-2 mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold">AI for ALL</h1>
+            </div>
+            
+            <div class="flex items-center mb-8">
+                <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center mr-3">
+                    <span class="text-lg font-bold">N</span>
+                </div>
+                <div>
+                    <p class="font-bold">NAME</p>
+                    <p class="text-sm text-gray-500">Grade--</p>
+                </div>
+            </div>
+            
+            <div class="space-y-4">
+                 <a href="dashboard.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Dashboard
+                </a>
+                  <a href="lessons.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Lessons
+                </a>
+          
+                <a href="reward.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Rewards
+                </a>
+
+              
+        <a href="Mentor-chat.html" target="_blank"
+                    class="nav-item active flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Mentor Chat
+                </a>
+                 </div>
+        </div> 
+        <div class="mt-auto p-6">
+            <button class="flex items-center text-gray-600 hover:text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Settings
+            </button>
+            <div class="flex items-center mt-4">
+                <div class="mr-3">
+                    <label class="text-sm text-gray-600">High Contrast</label>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="high-contrast-toggle">
+                    <span class="w-10 h-5 bg-gray-300 rounded-full relative inline-block">
+                        <span class="toggle-dot absolute w-4 h-4 bg-white rounded-full top-0.5 left-0.5 transition-transform duration-300 ease-in-out"></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mentor Chat Content -->
+    <section class="md:pl-64 pb-20 md:pb-0">
+        <div class="p-6 md:p-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold">Mentor Chat</h1>
+                    <p class="text-gray-600">Get help from AI and human mentors</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
+                    <span class="text-lg font-bold">N</span>
+                </div>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="flex space-x-2 mb-6">
+                <button class="tab active">Chat</button>
+            
+            </div>
+            
+            <!-- Chat Tab Content -->
+            <div id="chat-tab" class="tab-content active">
+                <div class="flex md:h-[calc(100vh-220px)]">
+                    <!-- Chat Sidebar (Contacts) -->
+                    <div class="chat-sidebar hidden md:block">
+                        <div class="p-4 border-b">
+                            <div class="relative">
+                                <input type="text" placeholder="Search messages..." class="w-full p-2 pl-8 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 absolute left-2.5 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-contact active">
+                            <div class="relative">
+                                <div class="mentor-avatar bg-primary text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                    </svg>
+                                </div>
+                                <div class="mentor-status status-online"></div>
+                            </div>
+                            <div class="chat-contact-info">
+                                <div class="chat-contact-name">AI Assistant</div>
+                                <div class="chat-contact-preview">I can help with your AI questions!</div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="chat-contact-time">Now</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-contact">
+                            <div class="relative">
+                                <div class="mentor-avatar bg-purple text-white">DR</div>
+                                <div class="mentor-status status-online"></div>
+                            </div>
+                            <div class="chat-contact-info">
+                                <div class="chat-contact-name">Dr. Rodriguez</div>
+                                <div class="chat-contact-preview">Let me know if you need help with your project</div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="chat-contact-time">10:45 AM</div>
+                                <div class="chat-contact-badge">2</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-contact">
+                            <div class="relative">
+                                <div class="mentor-avatar bg-secondary text-white">MS</div>
+                                <div class="mentor-status status-offline"></div>
+                            </div>
+                            <div class="chat-contact-info">
+                                <div class="chat-contact-name">Ms. Smith</div>
+                                <div class="chat-contact-preview">Great job on your last assignment!</div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="chat-contact-time">Yesterday</div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-contact">
+                            <div class="relative">
+                                <div class="mentor-avatar bg-success text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                                <div class="mentor-status status-online"></div>
+                            </div>
+                            <div class="chat-contact-info">
+                                <div class="chat-contact-name">AI Study Group</div>
+                                <div class="chat-contact-preview">Alex: When is our next meeting?</div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="chat-contact-time">Monday</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Main Area -->
+                    <div class="chat-main w-full">
+                        <div class="chat-header">
+                            <div class="flex items-center">
+                                <button class="md:hidden mr-2" id="show-sidebar">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
+                                <div class="relative">
+                                    <div class="mentor-avatar bg-primary text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                        </svg>
+                                    </div>
+                                    <div class="mentor-status status-online"></div>
+                                </div>
+                                <div class="ml-3">
+                                    <div class="font-bold">AI Assistant</div>
+                                    <div class="text-xs text-green-500">Online</div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="p-2 rounded-full hover:bg-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                </button>
+                                <button class="p-2 rounded-full hover:bg-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                </button>
+                                <button class="p-2 rounded-full hover:bg-gray-100">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                       
+                             <div class="chat-messages">
+                            <div class="message message-mentor">
+                                <p>Hi Jane! 👋 Welcome to AI Explorers. I'm your AI assistant and I'm here to help you with any questions about artificial intelligence, your projects, or anything else you're curious about.</p>
+                                <div class="message-time">10:00 AM</div>
+                            </div>
+                            
+                            <div class="message message-user">
+                                <p>Hi! I'm working on my image classifier project and I'm stuck. How do I prepare my training data?</p>
+                                <div class="message-time">10:05 AM</div>
+                            </div>
+                            
+                            <div class="message message-mentor">
+                                <p>Great question! For your image classifier project, you'll need to prepare your training data by following these steps:</p>
+                                <ol class="list-decimal pl-5 mt-2">
+                                    <li>Collect a diverse set of images for each category you want to classify</li>
+                                    <li>Resize all images to the same dimensions (e.g., 224x224 pixels)</li>
+                                    <li>Normalize the pixel values to be between 0 and 1</li>
+                                    <li>Split your data into training and testing sets (typically 80% training, 20% testing)</li>
+                                    <li>Organize your images into folders by category</li>
+                                </ol>
+                                <p class="mt-2">Would you like me to explain any of these steps in more detail?</p>
+                                <div class="message-time">10:07 AM</div>
+                            </div>
+                            
+                            <div class="message message-user">
+                                <p>How do I normalize the pixel values? And how many images do I need for each category?</p>
+                                <div class="message-time">10:10 AM</div>
+                            </div>
+                            
+                            <div class="message message-mentor">
+                                <p>To normalize pixel values, you divide each pixel value by 255 (assuming your images use the standard 0-255 range). This converts them to a 0-1 range, which helps the neural network learn more effectively.</p>
+                                <p class="mt-2">For the number of images, it depends on the complexity of your classification task, but a good starting point is:</p>
+                                <ul class="list-disc pl-5 mt-2">
+                                    <li>Simple project: At least 100-200 images per category</li>
+                                    <li>More complex project: 500+ images per category</li>
+                                </ul>
+                                <p class="mt-2">If you don't have that many images, you can use data augmentation techniques to create variations of your existing images (like rotating, flipping, or changing brightness).</p>
+                                <div class="message-time">10:12 AM</div>
+                            </div>
+                            
+                            <div class="message message-user">
+                                <p>That's helpful! Can you show me a simple code example for loading and normalizing images?</p>
+                                <div class="message-time">10:15 AM</div>
+                            </div>
+                            
+                            <div class="message message-mentor">
+                                <p>Here's a simple example using Python with the Pillow library for loading and normalizing images:</p>
+                                <pre class="bg-gray-100 p-3 rounded-lg mt-2 overflow-x-auto">
+
+</pre>
+                        <div class="chat-input">
+                            <button class="p-2 rounded-full hover:bg-gray-100 mr-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                </svg>
+                            </button>
+                            <div class="relative flex-grow">
+                                <input type="text" placeholder="Type your message..." class="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <button class="absolute right-3 top-3 text-gray-500" id="emoji-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <button class="p-2 rounded-full hover:bg-gray-100 ml-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                                </svg>
+                            </button>
+                            <button class="bg-primary text-white p-3 rounded-lg ml-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Emoji Picker -->
+                        <div class="emoji-picker" id="emoji-picker">
+                            <div class="emoji-categories">
+                                <div class="emoji-category">😀</div>
+                                <div class="emoji-category">🐶</div>
+                                <div class="emoji-category">🍎</div>
+                                <div class="emoji-category">🏀</div>
+                                <div class="emoji-category">🚗</div>
+                                <div class="emoji-category">💡</div>
+                            </div>
+                            <div class="emoji-grid">
+                                <div class="emoji">😀</div>
+                                <div class="emoji">😁</div>
+                                <div class="emoji">😂</div>
+                                <div class="emoji">🤣</div>
+                                <div class="emoji">😃</div>
+                                <div class="emoji">😄</div>
+                                <div class="emoji">😅</div>
+                                <div class="emoji">😆</div>
+                                <div class="emoji">😉</div>
+                                <div class="emoji">😊</div>
+                                <div class="emoji">😋</div>
+                                <div class="emoji">😎</div>
+                                <div class="emoji">😍</div>
+                                <div class="emoji">😘</div>
+                                <div class="emoji">🥰</div>
+                                <div class="emoji">😗</div>
+                                <div class="emoji">😙</div>
+                                <div class="emoji">😚</div>
+                                <div class="emoji">🙂</div>
+                                <div class="emoji">🤗</div>
+                                <div class="emoji">🤩</div>
+                                <div class="emoji">🤔</div>
+                                <div class="emoji">🤨</div>
+                                <div class="emoji">😐</div>
+                                <div class="emoji">😑</div>
+                                <div class="emoji">😶</div>
+                                <div class="emoji">🙄</div>
+                                <div class="emoji">😏</div>
+                                <div class="emoji">😣</div>
+                                <div class="emoji">😥</div>
+                                <div class="emoji">😮</div>
+                                <div class="emoji">🤐</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            

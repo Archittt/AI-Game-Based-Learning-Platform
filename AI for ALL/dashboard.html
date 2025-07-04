@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI For All - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361EE',
+                        secondary: '#3CCFCF',
+                        accent: '#FFC857',
+                        success: '#06D6A0',
+                        warning: '#FF5A5F',
+                        purple: '#7209B7',
+                        background: '#F8F9FA'
+                    },
+                    fontFamily: {
+                        nunito: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow-x: hidden;
+            background-color: #F8F9FA;
+        }
+
+        .progress-bar {
+            height: 12px;
+            border-radius: 6px;
+            background: #e0e0e0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #4361EE, #3CCFCF);
+            transition: width 0.5s ease;
+        }
+
+        .badge {
+            transition: transform 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #4361EE;
+            font-weight: bold;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #3CCFCF;
+        }
+
+        .card {
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .high-contrast {
+            filter: contrast(1.5);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar (mobile) -->
+    <nav id="main-nav" class="fixed bottom-0 left-0 w-full bg-white shadow-lg rounded-t-xl z-50 md:hidden">
+        <div class="flex justify-around items-center py-3 px-2">
+            <button class="nav-item active flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            <button class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <span class="text-xs mt-1">Lessons</span>
+            </button>
+            <button class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                </svg>
+                <span class="text-xs mt-1">Rewards</span>
+            </button>
+            <button class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                <span class="text-xs mt-1">Mentor</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Desktop Navigation (sidebar) -->
+    <div id="desktop-nav" class="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white shadow-lg flex-col z-50">
+        <div class="p-6">
+            <div class="flex items-center mb-8">
+                <div class="bg-primary rounded-lg p-2 mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold">AI For All</h1>
+            </div>
+
+            <div class="flex items-center mb-8">
+                <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center mr-3">
+                    <span class="text-lg font-bold">N</span>
+                </div>
+                <div>
+                    <p class="font-bold">NAME</p>
+                    <p class="text-sm text-gray-500">Grade--</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+
+                <a href="dashboard.html" target="_blank"
+                    class="nav-item active flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="lessons.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Lessons
+                </a>
+                <a href="reward.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Rewards
+                </a>
+
+                <a href="Mentor-chat.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Mentor chat
+                </a>
+
+            </div>
+        </div>
+
+        <div class="mt-auto p-6">
+            <button class="flex items-center text-gray-600 hover:text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <a href="settings.html" target="_blank">Settings</a>
+            </button>
+            <div class="flex items-center mt-4">
+                <div class="mr-3">
+                    <label class="text-sm text-gray-600">High Contrast</label>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="high-contrast-toggle">
+                    <span class="w-10 h-5 bg-gray-300 rounded-full relative inline-block">
+                        <span
+                            class="toggle-dot absolute w-4 h-4 bg-white rounded-full top-0.5 left-0.5 transition-transform duration-300 ease-in-out"></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <section class="md:pl-64 pb-20 md:pb-0">
+        <div class="p-6 md:p-8">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold">Welcome back</h1>
+                    <p class="text-gray-600">Continue your AI adventure</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
+                    <span class="text-lg font-bold">N</span>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="font-bold">Your Progress</h2>
+                    <span class="text-primary font-semibold">Level 4</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <div class="flex justify-between mt-1 text-sm">
+                    <span>65% Complete</span>
+                    <span>Next level: 35% to go</span>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <h2 class="font-bold mb-4">Continue Learning</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="card p-4 flex">
+                        <div
+                            class="bg-primary rounded-lg p-3 mr-4 h-16 w-16 flex-shrink-0 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">Machine Learning Basics</h3>
+                            <p class="text-sm text-gray-600 mb-2">Lesson 3 of 5</p>
+                            <div class="progress-bar h-2">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-4 flex">
+                        <div
+                            class="bg-secondary rounded-lg p-3 mr-4 h-16 w-16 flex-shrink-0 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">Image Classifier Project</h3>
+                            <p class="text-sm text-gray-600 mb-2">Project in progress</p>
+                            <div class="progress-bar h-2">
+                                <div class="progress-fill" style="width: 30%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold">Recent Achievements</h2>
+                    <button class="text-primary text-sm font-semibold">View All</button>
+                </div>
+                <div class="flex space-x-4 overflow-x-auto pb-2">
+                    <div class="badge flex flex-col items-center">
+                        <div class="bg-accent rounded-full p-3 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium">Quick Learner</span>
+                    </div>
+                    <div class="badge flex flex-col items-center">
+                        <div class="bg-purple rounded-full p-3 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium">Perfect Score</span>
+                    </div>
+                    <div class="badge flex flex-col items-center">
+                        <div class="bg-success rounded-full p-3 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium">5-Day Streak</span>
+                    </div>
+                    <div class="badge flex flex-col items-center">
+                        <div class="bg-primary rounded-full p-3 mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium">First Project</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="font-bold">Leaderboard</h2>
+                    <button class="text-primary text-sm font-semibold">Full Rankings</button>
+                </div>
+                <div class="card p-4">
+                    <div class="flex items-center justify-between py-2 border-b">
+                        <div class="flex items-center">
+                            <div class="bg-accent rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                                <span class="font-bold text-sm">1</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-purple flex items-center justify-center mr-2">
+                                    <span class="text-xs font-bold text-white">MJ</span>
+                                </div>
+                                <span>Max J.</span>
+                            </div>
+                        </div>
+                        <span class="font-bold">1,245 pts</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2 border-b">
+                        <div class="flex items-center">
+                            <div class="bg-secondary rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                                <span class="font-bold text-sm">2</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-success flex items-center justify-center mr-2">
+                                    <span class="text-xs font-bold text-white">SK</span>
+                                </div>
+                                <span>Sarah K.</span>
+                            </div>
+                        </div>
+                        <span class="font-bold">1,180 pts</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2 border-b bg-blue-50">
+                        <div class="flex items-center">
+                            <div class="bg-primary rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                                <span class="font-bold text-sm text-white">3</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center mr-2">
+                                    <span class="text-xs font-bold">JD</span>
+                                </div>
+                                <span>Jane D. (You)</span>
+                            </div>
+                        </div>
+                        <span class="font-bold">1,050 pts</span>
+                    </div>
+                    <div class="flex items-center justify-between py-2">
+                        <div class="flex items-center">
+                            <div class="bg-gray-200 rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                                <span class="font-bold text-sm">4</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center mr-2">
+                                    <span class="text-xs font-bold text-white">TL</span>
+                                </div>
+                                <span>Tyler L.</span>
+                            </div>
+                        </div>
+                        <span class="font-bold">980 pts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Floating Chat with AI Icon -->
+        <div style="position: relative;">
+            <a href="Mentor-chat.html" target="_blank" class="fixed bottom-5 right-5 z-50">
+                <div
+                    class="bg-primary text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 8h10M7 12h6m-1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    </svg>
+                </div>
+            </a>
+
+    </section>
+
+    <script>
+        // Toggle high contrast mode
+        document.getElementById('high-contrast-toggle')?.addEventListener('change', function () {
+            if (this.checked) {
+                document.body.classList.add('high-contrast');
+                document.querySelector('.toggle-dot').style.transform = 'translateX(20px)';
+            } else {
+                document.body.classList.remove('high-contrast');
+                document.querySelector('.toggle-dot').style.transform = 'translateX(0)';
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
