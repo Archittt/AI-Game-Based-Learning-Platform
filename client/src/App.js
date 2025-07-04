@@ -10,6 +10,7 @@ function App() {
     // Join user's Socket.IO room
     if (CURRENT_USER_ID) {
       socket.emit('join', CURRENT_USER_ID);
+      socket.emit('join_room', 'classroom');
     }
 
     // Listener for new-notification event
@@ -28,10 +29,18 @@ function App() {
       }
     });
 
+    // Listenee for peer achievement event
+    socket.on('peer_achievement', (data) => {
+      if (data.type == 'quiz_completed'){
+        alert('${data.username} completed quiz ${data.challengeId} in module ${data.moduleId} and earned ${data.points} point!'); 
+      }
+    });
+
     // Cleanup on component unmount
     return () => {
       socket.off('new-notification');
       socket.off('achievement');
+      socket.off('peer_achievement');
     };
   }, [CURRENT_USER_ID]);
 
