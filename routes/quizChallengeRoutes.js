@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const quizChallengeController = require('../controllers/quizChallengeController');
 const authenticate = require('../middleware/auth');
-
+const QuizAttempt = require('../models/quizAttemptModel');
+const GameProgress = require('../models/gameProgress');
 
 // Get quiz challenge by challengeId within module
 router.get('/:moduleId/challenge/:challengeId', authenticate, quizChallengeController.getQuizByChallengeId);
@@ -12,22 +13,38 @@ router.post('/:moduleId/challenge/:challengeId/submit', authenticate, async (req
   try {
     const { moduleId, challengeId } = req.params;
     const userId = req.user.id;
+    const { answer } = req.body; // Assuming answer is sent in request body
 
     // Call controller to handle quiz answer submission
     const result = await quizChallengeController.submitQuizAnswer(req, res);
 
-    // Check if the quiz is completed (assuming controller returns a 'completed' status or score)
-    if (result && result.completed) {
+    // Check if quiz is completed using GameProgress
+    const gameProgress = await GameProgress.findOne({
+      userId,
+      moduleId,
+      challengeId
+    }).sort({ updatedAt: -1 });
+
+    if (gameProgress && (gameProgress.completed || gameProgress.status === 'completed')) {
+      // Get score from QuizAttempt for points calculation
+      const quizAttempt = await QuizAttempt.findOne({
+        userId,
+        moduleId,
+        'answers.challengeId': challengeId
+      }).sort({ attemptedAt: -1 });
+
+      const points = quizAttempt ? quizAttempt.score * 5 : 0; // Fallback to 0 if no quizAttempt
+
       const io = req.app.get('io');
       io.to(userId).emit('achievement', {
         type: 'quiz_completed',
         moduleId,
         challengeId,
-        points: result.score * 5 // Example: 5 points per score, adjust based on your logic
+        points
       });
     }
 
-    // Controller handles the response, so no need to res.json here unless it doesn't
+    // Controller handles response, fallback if no response sent
     if (!res.headersSent) {
       res.status(200).json({ success: true, data: result });
     }
