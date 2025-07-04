@@ -7,12 +7,13 @@ const aiModuleSchema = new mongoose.Schema({
   concepts: [{ type: String }], // e.g., ["classification", "neural networks"]
   challenges: [{
     challengeId: { type: String, required: true },
-    type: { type: String, enum: ['puzzle', 'quiz', 'drag_drop', 'simulation'], required: true },
+    type: { type: String, enum: ['puzzle', 'quiz', 'coding', 'interactive', 'drag_drop', 'simulation'], required: true },
     question: { type: String, required: true },
     options: [{ type: String }], // For quizzes
     correctAnswer: { type: String },
     difficulty: { type: Number, min: 1, max: 10, required: true },
     hints: [{ type: String }],
+    totalQuestions : { type : number, min : 1},
     points: { type: Number, required: true }
   }],
   createdAt: { type: Date, default: Date.now },
