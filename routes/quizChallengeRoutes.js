@@ -4,6 +4,7 @@ const quizChallengeController = require('../controllers/quizChallengeController'
 const authenticate = require('../middleware/auth');
 const QuizAttempt = require('../models/quizAttemptModel');
 const GameProgress = require('../models/gameProgress');
+const User = require('../models/userModel');
 
 // Get quiz challenge by challengeId within module
 router.get('/:moduleId/challenge/:challengeId', authenticate, quizChallengeController.getQuizByChallengeId);
@@ -42,7 +43,18 @@ router.post('/:moduleId/challenge/:challengeId/submit', authenticate, async (req
         challengeId,
         points
       });
-    }
+
+      //Notify peer in classroom room
+      const user = await User.findById(userId).select('username');
+      const username = user ? user.username : ' A user';
+      io.to('classroom').emit('peer_acheivememt', {
+        type : 'quiz_completed',
+        username, 
+        moduleId,
+        challengeId,
+        points
+      });   
+    } 
 
     // Controller handles response, fallback if no response sent
     if (!res.headersSent) {
