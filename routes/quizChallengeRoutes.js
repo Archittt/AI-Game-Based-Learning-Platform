@@ -5,6 +5,7 @@ const authenticate = require('../middleware/auth');
 const QuizAttempt = require('../models/quizAttemptModel');
 const GameProgress = require('../models/gameProgress');
 const User = require('../models/userModel');
+const AIModule = require('../models/AIModule');
 
 // Get quiz challenge by challengeId within module
 router.get('/:moduleId/challenge/:challengeId', authenticate, quizChallengeController.getQuizByChallengeId);
@@ -14,29 +15,51 @@ router.post('/:moduleId/challenge/:challengeId/submit', authenticate, async (req
   try {
     const { moduleId, challengeId } = req.params;
     const userId = req.user.id;
-    const { answer } = req.body; // Assuming answer is sent in request body
+    const { answer } = req.body;
 
     // Call controller to handle quiz answer submission
     const result = await quizChallengeController.submitQuizAnswer(req, res);
 
-    // Check if quiz is completed using GameProgress
-    const gameProgress = await GameProgress.findOne({
+    // Update GameProgress to track attempt
+    const module = await AIModule.findById(moduleId);
+    if (!module) throw new Error('Module not found');
+
+    const quiz = module.challenges.find(ch => ch.challengeId === challengeId && ch.type === 'quiz');
+    if (!quiz) throw new Error('Quiz not found');
+
+    // Get total questions for the quiz (assuming AIModule.challenges has a totalQuestions field or count)
+    const totalQuestions = quiz.totalQuestions || module.challenges.filter(ch => ch.type === 'quiz' && ch.challengeId === challengeId).length;
+
+    // Get all quiz attempts for this challenge
+    const quizAttempts = await QuizAttempt.find({
       userId,
       moduleId,
-      challengeId
-    }).sort({ updatedAt: -1 });
+      'answers.challengeId': challengeId
+    });
 
-    if (gameProgress && (gameProgress.completed || gameProgress.status === 'completed')) {
-      // Get score from QuizAttempt for points calculation
-      const quizAttempt = await QuizAttempt.findOne({
-        userId,
-        moduleId,
-        'answers.challengeId': challengeId
-      }).sort({ attemptedAt: -1 });
+    const totalScore = quizAttempts.reduce((sum, attempt) => sum + attempt.score, 0);
 
-      const points = quizAttempt ? quizAttempt.score * 5 : 0; // Fallback to 0 if no quizAttempt
+    // Update GameProgress
+    const gameProgress = await GameProgress.findOneAndUpdate(
+      { userId, moduleId, challengeId },
+      {
+        $inc: { attempts: 1 },
+        $set: {
+          score: totalScore,
+          completed: quizAttempts.length >= totalQuestions,
+          status: quizAttempts.length >= totalQuestions ? 'completed' : 'in_progress',
+          updatedAt: new Date()
+        }
+      },
+      { new: true, upsert: true }
+    );
 
+    // Emit notifications if quiz is completed
+    if (gameProgress.completed || gameProgress.status === 'completed') {
+      const points = totalScore * 5; // 5 points per score unit
       const io = req.app.get('io');
+
+      // Notify the user
       io.to(userId).emit('achievement', {
         type: 'quiz_completed',
         moduleId,
@@ -44,17 +67,17 @@ router.post('/:moduleId/challenge/:challengeId/submit', authenticate, async (req
         points
       });
 
-      //Notify peer in classroom room
-      const user = await User.findById(userId).select('username');
-      const username = user ? user.username : ' A user';
-      io.to('classroom').emit('peer_acheivememt', {
-        type : 'quiz_completed',
-        username, 
+      // Notify peers in the classroom room
+      const user = await User.findById(userId).select('name');
+      const name = user ? user.name : 'A user';
+      io.to('classroom').emit('peer_achievement', {
+        type: 'quiz_completed',
+        name,
         moduleId,
         challengeId,
         points
-      });   
-    } 
+      });
+    }
 
     // Controller handles response, fallback if no response sent
     if (!res.headersSent) {
