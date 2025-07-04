@@ -7,14 +7,31 @@ function App() {
   const CURRENT_USER_ID = localStorage.getItem('userId'); // Or use context/state
 
   useEffect(() => {
+    // Join user's Socket.IO room
+    if (CURRENT_USER_ID) {
+      socket.emit('join', CURRENT_USER_ID);
+    }
+
+    // Listener for new-notification event
     socket.on('new-notification', (data) => {
       if (data.userId === CURRENT_USER_ID) {
         alert(data.message); // You can replace with toast later
       }
     });
 
+    // Listener for achievement event
+    socket.on('achievement', (data) => {
+      if (data.type === 'quiz_completed') {
+        alert(`Quiz ${data.challengeId} in module ${data.moduleId} completed! Earned ${data.points} points.`);
+      } else if (data.type === 'module_completed') {
+        alert(`Module ${data.moduleId} completed! Earned ${data.points} points.`);
+      }
+    });
+
+    // Cleanup on component unmount
     return () => {
       socket.off('new-notification');
+      socket.off('achievement');
     };
   }, [CURRENT_USER_ID]);
 
