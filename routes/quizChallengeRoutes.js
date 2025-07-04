@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const quizChallengeController = require('../controllers/quizChallengeController');
@@ -27,8 +28,10 @@ router.post('/:moduleId/challenge/:challengeId/submit', authenticate, async (req
     const quiz = module.challenges.find(ch => ch.challengeId === challengeId && ch.type === 'quiz');
     if (!quiz) throw new Error('Quiz not found');
 
-    // Get total questions for the quiz (assuming AIModule.challenges has a totalQuestions field or count)
-    const totalQuestions = quiz.totalQuestions || module.challenges.filter(ch => ch.type === 'quiz' && ch.challengeId === challengeId).length;
+    // Get total questions (use totalQuestions if defined, else count quiz challenges)
+    const totalQuestions = quiz.totalQuestions || module.challenges.filter(
+      ch => ch.type === 'quiz' && ch.challengeId === challengeId
+    ).length || 1;
 
     // Get all quiz attempts for this challenge
     const quizAttempts = await QuizAttempt.find({
@@ -56,7 +59,7 @@ router.post('/:moduleId/challenge/:challengeId/submit', authenticate, async (req
 
     // Emit notifications if quiz is completed
     if (gameProgress.completed || gameProgress.status === 'completed') {
-      const points = totalScore * 5; // 5 points per score unit
+      const points = totalScore * 5;
       const io = req.app.get('io');
 
       // Notify the user
