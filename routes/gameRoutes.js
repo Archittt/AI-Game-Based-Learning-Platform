@@ -14,6 +14,18 @@ router.post("/progress", authenticate, async (req, res) => {
       { new: true, upsert: true }
     );
 
+    // Emit real time notification
+    // if module is completed
+    if(completed) {
+      const io = req.app.get('io');
+      io.to(userId).emit
+      ('achievement', {
+        type: 'module_completed',
+        moduleId,
+        points: score * 10
+      });
+    }
+      
     res.status(200).json({ success: true, data: progress });
   } catch (err) {
     console.error(err);
