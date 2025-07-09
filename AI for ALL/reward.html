@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for ALL - Rewards</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361EE',
+                        secondary: '#3CCFCF',
+                        accent: '#FFC857',
+                        success: '#06D6A0',
+                        warning: '#FF5A5F',
+                        purple: '#7209B7',
+                        background: '#F8F9FA'
+                    },
+                    fontFamily: {
+                        nunito: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            overflow-x: hidden;
+            background-color: #F8F9FA;
+        }
+
+        .progress-bar {
+            height: 12px;
+            border-radius: 6px;
+            background: #e0e0e0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #4361EE, #3CCFCF);
+            transition: width 0.5s ease;
+        }
+
+        .badge {
+            transition: transform 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active {
+            color: #4361EE;
+            font-weight: bold;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #3CCFCF;
+        }
+
+        .card {
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .high-contrast {
+            filter: contrast(1.5);
+        }
+
+        .tab {
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: #4361EE;
+            border-bottom: 3px solid #4361EE;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .badge-card {
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .badge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .badge-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge-icon::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #4361EE, #3CCFCF);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .badge-card:hover .badge-icon::before {
+            opacity: 1;
+        }
+
+        .badge-locked {
+            filter: grayscale(1);
+            opacity: 0.7;
+        }
+
+        .badge-locked .badge-icon {
+            background-color: #e0e0e0 !important;
+        }
+
+        .certificate {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #4361EE, #3CCFCF);
+        }
+
+        .certificate-seal {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234361EE'%3E%3Cpath d='M12 15.968l4.247 2.377-.949-4.773 3.573-3.305-4.833-.573L12 5.275l-2.038 4.42-4.833.572 3.573 3.305-.949 4.773L12 15.968z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.2;
+        }
+
+        .reward-item {
+            border-radius: 16px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .reward-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .points-card {
+            background: linear-gradient(135deg, #4361EE, #3CCFCF);
+            border-radius: 16px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .points-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 60%);
+            z-index: 1;
+        }
+
+        .points-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .streak-card {
+            background: linear-gradient(135deg, #FFC857, #FF5A5F);
+            border-radius: 16px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .streak-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 60%);
+            z-index: 1;
+        }
+
+        .streak-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .level-card {
+            background: linear-gradient(135deg, #7209B7, #4361EE);
+            border-radius: 16px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 60%);
+            z-index: 1;
+        }
+
+        .level-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FFC857;
+            opacity: 0.8;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(500px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #4361EE;
+        }
+
+        .badge-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .badge-detail-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-circle {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .progress-circle-bg {
+            fill: none;
+            stroke: #e0e0e0;
+            stroke-width: 8;
+        }
+
+        .progress-circle-fill {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition: stroke-dasharray 0.5s ease;
+        }
+
+        .progress-circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .leaderboard-rank {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.75rem;
+        }
+
+        .rank-1 {
+            background-color: #FFD700;
+            color: white;
+        }
+
+        .rank-2 {
+            background-color: #C0C0C0;
+            color: white;
+        }
+
+        .rank-3 {
+            background-color: #CD7F32;
+            color: white;
+        }
+
+        .rank-other {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .leaderboard-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-weight: bold;
+        }
+
+        .leaderboard-name {
+            flex-grow: 1;
+        }
+
+        .leaderboard-points {
+            font-weight: bold;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.875rem;
+        }
+
+        .calendar-day-active {
+            background-color: #4361EE;
+            color: white;
+        }
+
+        .calendar-day-streak {
+            background-color: #06D6A0;
+            color: white;
+        }
+
+        .calendar-day-missed {
+            background-color: #FF5A5F;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+   <!-- Navigation Bar (mobile) -->
+    <nav id="main-nav" class="fixed bottom-0 left-0 w-full bg-white shadow-lg rounded-t-xl z-50 md:hidden">
+        <div class="flex justify-around items-center py-3 px-2">
+            <a href="dashboard.html" class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                <span class="text-xs mt-1">Home</span>
+            </a>
+            <a href="lessons.html" class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                <span class="text-xs mt-1">Lessons</span>
+            </a>
+           <a href="reward.html" class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                <span class="text-xs mt-1">Rewards</span>
+            </a>
+            <a href="Mentor-chat.html" class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                <span class="text-xs mt-1">Mentor</span>
+            </a>
+            <a href="quizzes.html" class="nav-item flex flex-col items-center p-2 w-1/5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+                <span class="text-xs mt-1">Quiz</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Desktop Navigation (sidebar) -->
+    <div id="desktop-nav" class="hidden md:flex fixed left-0 top-0 h-full w-64 bg-white shadow-lg flex-col z-50">
+        <div class="p-6">
+            <div class="flex items-center mb-8">
+                <div class="bg-primary rounded-lg p-2 mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold">AI for ALL</h1>
+            </div>
+
+            <div class="flex items-center mb-8">
+                <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center mr-3">
+                    <span class="text-lg font-bold">N</span>
+                </div>
+                <div>
+                    <p class="font-bold">NAME</p>
+                    <p class="text-sm text-gray-500">Grade--</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <a href="dashboard.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="lessons.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Lessons
+                </a>
+                <a href="reward.html" target="_blank"
+                    class="nav-item active flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Rewards
+                </a>
+                <a href="Mentor-chat.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Mentor Chat
+                </a>
+                <a href="quizzes.html" target="_blank"
+                    class="nav-item flex items-center w-full p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Quizes
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-auto p-6">
+            <button class="flex items-center text-gray-600 hover:text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Settings
+            </button>
+            <div class="flex items-center mt-4">
+                <div class="mr-3">
+                    <label class="text-sm text-gray-600">High Contrast</label>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="high-contrast-toggle">
+                    <span class="w-10 h-5 bg-gray-300 rounded-full relative inline-block">
+                        <span
+                            class="toggle-dot absolute w-4 h-4 bg-white rounded-full top-0.5 left-0.5 transition-transform duration-300 ease-in-out"></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rewards Content -->
+    <section class="md:pl-64 pb-20 md:pb-0">
+        <div class="p-6 md:p-8">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold">Rewards & Achievements</h1>
+                    <p class="text-gray-600">Track your progress and earn rewards</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-accent flex items-center justify-center">
+                    <span class="text-lg font-bold">N</span>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="points-card p-5">
+                    <div class="points-card-content">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-lg">Total Points</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="flex items-end">
+                            <span class="text-4xl font-bold">2,450</span>
+                            <span class="ml-2 text-sm bg-white bg-opacity-20 px-2 py-1 rounded-full">+150 this
+                                week</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="progress-bar bg-white bg-opacity-20">
+                                <div class="progress-fill bg-white" style="width: 75%"></div>
+                            </div>
+                            <div class="flex justify-between mt-1 text-sm">
+                                <span>Next reward: 2,500 pts</span>
+                                <span>50 pts to go!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="streak-card p-5">
+                    <div class="streak-card-content">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-lg">Learning Streak</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+                            </svg>
+                        </div>
+                        <div class="flex items-end">
+                            <span class="text-4xl font-bold">14</span>
+                            <span class="ml-2">days</span>
+                        </div>
+                        <p class="mt-2 text-sm">Your best streak: 21 days</p>
+                        <div class="mt-4 flex space-x-1">
+                            <div
+                                class="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xs">
+                                M</div>
+                            <div
+                                class="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xs">
+                                T</div>
+                            <div
+                                class="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xs">
+                                W</div>
+                            <div
+                                class="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xs">
+                                T</div>
+                            <div
+                                class="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xs">
+                                F</div>
+                            <div
+                                class="w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs text-accent font-bold">
+                                S</div>
+                            <div
+                                class="w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs text-accent font-bold">
+                                S</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-card p-5">
+                    <div class="level-card-content">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-lg">Current Level</h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <div class="flex items-end">
+                            <span class="text-4xl font-bold">7</span>
+                            <span class="ml-2 text-sm bg-white bg-opacity-20 px-2 py-1 rounded-full">AI Explorer</span>
+                        </div>
+                        <div class="mt-4">
+                            <div class="progress-bar bg-white bg-opacity-20">
+                                <div class="progress-fill bg-white" style="width: 60%"></div>
+                            </div>
+                            <div class="flex justify-between mt-1 text-sm">
+                                <span>Level 7</span>
+                                <span>Level 8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="border-b mb-6">
+                <div class="flex">
+                    <button class="tab active px-4 py-2 mr-4">Badges</button>
+                    <button class="tab px-4 py-2 mr-4">Certificates</button>
+                    <button class="tab px-4 py-2 mr-4">Leaderboard</button>
+                    <button class="tab px-4 py-2">Redeem</button>
+                </div>
+            </div>
+
+            <!-- Badges Tab Content -->
+            <div id="badges" class="tab-content active">
+                <div class="mb-6">
+                    <h2 class="font-bold text-lg mb-4">Recently Earned</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        <div class="badge-card p-4 text-center" id="badge-1">
+                            <div class="badge-icon bg-primary mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold">AI Novice</h3>
+                            <p class="text-xs text-gray-500">Completed first AI lesson</p>
+                            <p class="text-xs text-primary mt-1">Earned 3 days ago</p>
+                        </div>
+
+                        <div class="badge-card p-4 text-center" id="badge-2">
+                            <div class="badge-icon bg-secondary mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold">First Project</h3>
+                            <p class="text-xs text-gray-500">Completed first project</p>
+                            <p class="text-xs text-primary mt-1">Earned 1 week ago</p>
+                        </div>
+
+                        <div class="badge-card p-4 text-center" id="badge-3">
+                            <div class="badge-icon bg-accent mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold">On Fire</h3>
+                            <p class="text-xs text-gray-500">7-day learning streak</p>
+                            <p class="text-xs text-primary mt-1">Earned 2 weeks ago</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <h2 class="font-bold text-lg mb-4">Learning Badges</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        <div class="badge-card p-4 text-center" id="badge-4">
+                            <div class="badge-icon bg-primary mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold">AI Apprentice</h3>
+                            <p class="text-xs text-gray-500">Complete 5 AI lessons</p>
+                            <div class="mt-2">
+                                <div class="progress-bar h-2">
+                                    <div class="progress-fill" style="width: 80%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">4/5 completed</p>
+                            </div>
+                        </div>
+
+                        <div class="badge-card p-4 text-center" id="badge-5">
+                            <div class="badge-icon bg-purple mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold">Neural Network Ninja</h3>
+                            <p class="text-xs text-gray-500">Complete neural networks course</p>
+                            <div class="mt-2">
+                                <div class="progress-bar h-2">
+                                    <div class="progress-fill" style="width: 30%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">3/10 lessons</p>
+                            </div>
+                        </div>
+
+                        <div class="badge-card badge-locked p-4 text-center" id="badge-6">
+                            <div class="badge-icon mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold text-gray-500">AI Ethics Expert</h3>
+                            <p class="text-xs text-gray-500">Complete ethics course</p>
+                            <p class="text-xs text-gray-400 mt-1">Locked</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="font-bold text-lg mb-4">Project Badges</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        <div class="badge-card p-4 text-center" id="badge-7">
+                            <div class="badge-icon bg-secondary mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold">Creative Coder</h3>
+                            <p class="text-xs text-gray-500">Complete AI art project</p>
+                            <div class="mt-2">
+                                <div class="progress-bar h-2">
+                                    <div class="progress-fill" style="width: 50%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">In progress</p>
+                            </div>
+                        </div>
+
+                        <div class="badge-card badge-locked p-4 text-center" id="badge-8">
+                            <div class="badge-icon mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold text-gray-500">Chatbot Creator</h3>
+                            <p class="text-xs text-gray-500">Build a working chatbot</p>
+                            <p class="text-xs text-gray-400 mt-1">Locked</p>
+                        </div>
+
+                        <div class="badge-card badge-locked p-4 text-center" id="badge-9">
+                            <div class="badge-icon mb-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                            </div>
+                            <h3 class="font-bold text-gray-500">Data Detective</h3>
+                            <p class="text-xs text-gray-500">Complete data analysis project</p>
+                            <p class="text-xs text-gray-400 mt-1">Locked</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certificates Tab Content -->
+            <div id="certificates" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="certificate p-6">
+                        <div class="mb-4">
+                            <h3 class="text-xl font-bold mb-1">Introduction to AI</h3>
+                            <p class="text-gray-600">Successfully completed the beginner course</p>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Issued: June 15, 2023</p>
+                                <p class="text-sm text-gray-500">Certificate ID: AI-BEG-12345</p>
+                            </div>
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                </svg>
+                                <span class="font-semibold">Grade: A</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-primary font-semibold flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                View Certificate
+                            </button>
+                            <button class="text-gray-500 font-semibold flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download
+                            </button>
+                        </div>
+                        <div class="certificate-seal"></div>
+                    </div>
+
+                    <div class="certificate p-6">
+                        <div class="mb-4">
+                            <h3 class="text-xl font-bold mb-1">AI Ethics for Kids</h3>
+                            <p class="text-gray-600">Successfully completed the ethics course</p>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Issued: May 22, 2023</p>
+                                <p class="text-sm text-gray-500">Certificate ID: AI-ETH-67890</p>
+                            </div>
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-accent mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                </svg>
+                                <span class="font-semibold">Grade: A+</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="text-primary font-semibold flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                View Certificate
+                            </button>
+                            <button class="text-gray-500 font-semibold flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download
+                            </button>
+                        </div>
+                        <div class="certificate-seal"></div>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h2 class="font-bold text-lg mb-4">Upcoming Certificates</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-lg p-6 border border-gray-200">
+                            <div class="mb-4">
+                                <h3 class="text-xl font-bold mb-1">Machine Learning Basics</h3>
+                                <p class="text-gray-600">Intermediate course</p>
+                            </div>
+                            <div class="mb-4">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                                <div class="flex justify-between mt-1 text-sm text-gray-500">
+                                    <span>60% complete</span>
+                                    <span>3 lessons remaining</span>
+                                </div>
+                            </div>
+                            <button class="text-primary font-semibold flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Continue Course
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab Content -->
+            <div id="leaderboard" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="col-span-1 md:col-span-2">
+                        <div class="bg-white rounded-lg p-6 shadow-md mb-6">
+                            <h2 class="font-bold text-lg mb-4">Class Leaderboard</h2>
+                            <div class="space-y-2">
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-rank rank-1">1</div>
+                                    <div class="leaderboard-avatar bg-purple text-white">TK</div>
+                                    <div class="leaderboard-name">
+                                        <p class="font-semibold">Tyler Kim</p>
+                                        <p class="text-xs text-gray-500">Level 8</p>
+                                    </div>
+                                    <div class="leaderboard-points">3,245 pts</div>
+                                </div>
+
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-rank rank-2">2</div>
+                                    <div class="leaderboard-avatar bg-primary text-white">MP</div>
+                                    <div class="leaderboard-name">
+                                        <p class="font-semibold">Maria Patel</p>
+                                        <p class="text-xs text-gray-500">Level 8</p>
+                                    </div>
+                                    <div class="leaderboard-points">3,120 pts</div>
+                                </div>
+
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-rank rank-3">3</div>
+                                    <div class="leaderboard-avatar bg-secondary text-white">JL</div>
+                                    <div class="leaderboard-name">
+                                        <p class="font-semibold">James Lee</p>
+                                        <p class="text-xs text-gray-500">Level 7</p>
+                                    </div>
+                                    <div class="leaderboard-points">2,980 pts</div>
+                                </div>
+
+                                <div class="leaderboard-item bg-blue-50">
+                                    <div class="leaderboard-rank rank-other">4</div>
+                                    <div class="leaderboard-avatar bg-accent">JD</div>
+                                    <div class="leaderboard-name">
+                                        <p class="font-semibold">Jane Doe (You)</p>
+                                        <p class="text-xs text-gray-500">Level 7</p>
+                                    </div>
+                                    <div class="leaderboard-points">2,450 pts</div>
+                                </div>
+
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-rank rank-other">5</div>
+                                    <div class="leaderboard-avatar bg-warning text-white">RG</div>
+                                    <div class="leaderboard-name">
+                                        <p class="font-semibold">Ryan Garcia</p>
+                                        <p class="text-xs text-gray-500">Level 7</p>
+                                    </div>
+                                    <div class="leaderboard-points">2,340 pts</div>
+                                </div>
+
+                                <div class="leaderboard-item">
+                                    <div class="leaderboard-rank rank-other">6</div>
+                                    <div class="leaderboard-avatar bg-success text-white">AW</div>
+                                    <div class="leaderboard-name">
+                                        <p class="font-semibold">Aisha Wong</p>
+                                        <p class="text-xs text-gray-500">Level 6</p>
+                                    </div>
+                                    <div class="leaderboard-points">2,105 pts</div>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <button class="text-primary font-semibold">View Full Leaderboard</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg p-6 shadow-md">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="font-bold text-lg">Your Progress</h2>
+                                <div class="flex items-center">
+                                    <span class="text-sm text-gray-500 mr-2">This Month</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="relative h-60">
+                                <!-- This would be a chart in a real implementation -->
+                                <div class="absolute bottom-0 left-0 w-full h-full flex items-end">
+                                    <div class="w-1/7 h-20 bg-primary mx-1 rounded-t-lg"></div>
+                                    <div class="w-1/7 h-12 bg-primary mx-1 rounded-t-lg"></div>
+                                    <div class="w-1/7 h-28 bg-primary mx-1 rounded-t-lg"></div>
+                                    <div class="w-1/7 h-16 bg-primary mx-1 rounded-t-lg"></div>
+                                    <div class="w-1/7 h-36 bg-primary mx-1 rounded-t-lg"></div>
+                                    <div class="w-1/7 h-24 bg-primary mx-1 rounded-t-lg"></div>
+                                    <div class="w-1/7 h-40 bg-primary mx-1 rounded-t-lg"></div>
+                                </div>
+                                <div class="absolute bottom-0 left-0 w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="flex justify-between mt-2 text-xs text-gray-500">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1">
+                        <div class="bg-white rounded-lg p-6 shadow-md mb-6">
+                            <h2 class="font-bold text-lg mb-4">Your Stats</h2>
+                            <div class="mb-4">
+                                <div class="progress-circle mx-auto">
+                                    <svg viewBox="0 0 100 100">
+                                        <defs>
+                                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stop-color="#4361EE" />
+                                                <stop offset="100%" stop-color="#3CCFCF" />
+                                            </linearGradient>
+                                        </defs>
+                                        <circle class="progress-circle-bg" cx="50" cy="50" r="46" />
+                                        <circle class="progress-circle-fill" cx="50" cy="50" r="46"
+                                            stroke-dasharray="217.8 289.0" />
+                                    </svg>
+                                    <div class="progress-circle-text">75%</div>
+                                </div>
+                                <p class="text-center mt-2 text-gray-600">Overall Completion</p>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Lessons Completed</span>
+                                        <span class="font-semibold">12/16</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Projects Completed</span>
+                                        <span class="font-semibold">3/5</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>Badges Earned</span>
+                                        <span class="font-semibold">8/15</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 53%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg p-6 shadow-md">
+                            <h2 class="font-bold text-lg mb-4">Learning Streak</h2>
+                            <div class="mb-4">
+                                <div class="calendar">
+                                    <div class="calendar-day">1</div>
+                                    <div class="calendar-day">2</div>
+                                    <div class="calendar-day">3</div>
+                                    <div class="calendar-day calendar-day-streak">4</div>
+                                    <div class="calendar-day calendar-day-streak">5</div>
+                                    <div class="calendar-day calendar-day-streak">6</div>
+                                    <div class="calendar-day calendar-day-streak">7</div>
+                                    <div class="calendar-day calendar-day-streak">8</div>
+                                    <div class="calendar-day calendar-day-streak">9</div>
+                                    <div class="calendar-day calendar-day-streak">10</div>
+                                    <div class="calendar-day calendar-day-streak">11</div>
+                                    <div class="calendar-day calendar-day-streak">12</div>
+                                    <div class="calendar-day calendar-day-streak">13</div>
+                                    <div class="calendar-day calendar-day-streak">14</div>
+                                    <div class="calendar-day calendar-day-active">15</div>
+                                    <div class="calendar-day">16</div>
+                                    <div class="calendar-day">17</div>
+                                    <div class="calendar-day">18</div>
+                                    <div class="calendar-day">19</div>
+                                    <div class="calendar-day">20</div>
+                                    <div class="calendar-day">21</div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-success rounded-full mr-1"></div>
+                                    <span>Completed</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-primary rounded-full mr-1"></div>
+                                    <span>Today</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-gray-300 rounded-full mr-1"></div>
+                                    <span>Upcoming</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redeem Tab Content -->
+            <div id="redeem" class="tab-content">
+                <div class="bg-white rounded-lg p-6 shadow-md mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="font-bold text-lg">Your Points</h2>
+                        <div class="bg-primary text-white px-4 py-2 rounded-full font-bold">2,450 pts</div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Use your points to redeem rewards and special items!</p>
+                    <div class="progress-bar mb-2">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>0 pts</span>
+                        <span>Next reward: 2,500 pts</span>
+                        <span>5,000 pts</span>
+                    </div>
+                </div>
+
+                <h2 class="font-bold text-lg mb-4">Available Rewards</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="reward-item p-5">```

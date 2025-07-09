@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI For All - Reset Password</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="forget-password.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361EE',
+                        secondary: '#3CCFCF',
+                        accent: '#FFC857',
+                        success: '#06D6A0',
+                        warning: '#FF5A5F',
+                        purple: '#7209B7',
+                        background: '#F8F9FA'
+                    },
+                    fontFamily: {
+                        nunito: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body>
+    <div class="reset-card">
+        <div class="logo-container">
+            <div class="logo-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+            </div>
+            <h1 class="text-xl font-bold">AI For All</h1>
+        </div>
+        
+        <!-- Initial Form View -->
+        <div id="reset-form-container">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Reset Your Password</h2>
+            <p class="text-gray-600 mb-6">Enter your email address and we'll send you a link to reset your password.</p>
+            
+            <form id="reset-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                    <div id="email-error" class="error-message hidden"></div>
+                </div>
+                
+                <button type="submit" class="reset-btn" id="reset-button">Send Reset Link</button>
+            </form>
+            
+            <div class="login-link">
+                Back to <a href="login page.html">Log in</a>
+            </div>
+        </div>
+        
+        <!-- Success View (Initially Hidden) -->
+        <div id="success-container" class="success-container hidden">
+            <div class="email-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Check Your Email</h2>
+            <p class="text-gray-600 mb-6">We've sent a password reset link to <span id="user-email" class="font-semibold"></span>. Please check your inbox and follow the instructions.</p>
+            
+            <div class="mb-6">
+                <p class="text-sm text-gray-500">Didn't receive the email?</p>
+                <button id="resend-button" class="text-primary font-semibold mt-2 hover:underline">Resend Link</button>
+            </div>
+            
+            <div class="login-link">
+                <a href="#" id="back-to-login">Back to Login</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Form validation and submission
+        const resetForm = document.getElementById('reset-form');
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('email-error');
+        const resetButton = document.getElementById('reset-button');
+        const resetFormContainer = document.getElementById('reset-form-container');
+        const successContainer = document.getElementById('success-container');
+        const userEmailSpan = document.getElementById('user-email');
+        const resendButton = document.getElementById('resend-button');
+        const backToLoginButton = document.getElementById('back-to-login');
+        
+        resetForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            emailError.textContent = '';
+            emailError.classList.add('hidden');
+            emailInput.classList.remove('error');
+            
+            // Validate email
+            const email = emailInput.value.trim();
+            if (!email) {
+                emailError.textContent = 'Email is required';
+                emailError.classList.remove('hidden');
+                emailInput.classList.add('error');
+                return;
+            } else if (!isValidEmail(email)) {
+                emailError.textContent = 'Please enter a valid email address';
+                emailError.classList.remove('hidden');
+                emailInput.classList.add('error');
+                return;
+            }
+            
+            // If validation passes, simulate sending reset link
+            simulateSendingResetLink(email);
+        });
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        function simulateSendingResetLink(email) {
+            // Show loading state
+            resetButton.textContent = 'Sending...';
+            resetButton.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                console.log('Password reset requested for:', email);
+                
+                // Show success view
+                resetFormContainer.classList.add('hidden');
+                userEmailSpan.textContent = email;
+                successContainer.classList.remove('hidden');
+                
+                // Reset form for future use
+                resetForm.reset();
+                resetButton.textContent = 'Send Reset Link';
+                resetButton.disabled = false;
+            }, 1500);
+        }
+        
+        // Resend button functionality
+        resendButton.addEventListener('click', function() {
+            const email = userEmailSpan.textContent;
+            
+            // Show loading state
+            this.textContent = 'Sending...';
+            this.disabled = true;
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                console.log('Resending password reset link to:', email);
+                
+                // Show confirmation
+                this.textContent = 'Link Sent!';
+                
+                // Reset button after a delay
+                setTimeout(() => {
+                    this.textContent = 'Resend Link';
+                    this.disabled = false;
+                }, 2000);
+            }, 1500);
+        });
+        
+        // Back to login button
+        backToLoginButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            // In a real app, this would redirect to the login page
+            // For demo purposes, we'll just show the form again
+            successContainer.classList.add('hidden');
+            resetFormContainer.classList.remove('hidden');
+        });
+        
+        // Clear error when input changes
+        emailInput.addEventListener('input', function() {
+            emailError.textContent = '';
+            emailError.classList.add('hidden');
+            this.classList.remove('error');
+        });
+        
+        // Add focus and blur events for better UX
+        emailInput.addEventListener('focus', function() {
+            this.parentElement.classList.add('ring-2', 'ring-primary', 'ring-opacity-50');
+        });
+        
+        emailInput.addEventListener('blur', function() {
+            this.parentElement.classList.remove('ring-2', 'ring-primary', 'ring-opacity-50');
+        });
+    </script>
+</body>
+</html>
