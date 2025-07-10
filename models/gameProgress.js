@@ -20,7 +20,6 @@ const gameProgressSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 },{ timestamps: true });
 
-// Indexes
 gameProgressSchema.index({ userId: 1, moduleId: 1 });
 
-module.exports = mongoose.model("GameProgress", gameProgressSchema);
+module.exports = mongoose.models.GameProgress || mongoose.model("GameProgress", gameProgressSchema);
