@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
   profilePicture: { type: String }, // URL, optional
   createdAt: { type: Date, default: Date.now},
   lastLogin: { type: Date },
-  socialId: { type: String }, // For social logins
+  socialId: { type: String },
+  parents:    [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // For social logins
   preferences: {
     language: { type: String, default: 'en' },
     accessibility: {

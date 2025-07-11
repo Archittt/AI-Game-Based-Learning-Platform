@@ -21,7 +21,7 @@ const chatbotRoutes = require("./routes/chatbotRoutes");
 const leaderboardRoutes = require("./routes/leaderboardRoutes");
 const aiIntegrationRoutes = require("./routes/aiIntegrationRoutes");
 const quizChallengeRoutes = require("./routes/quizChallengeRoutes");
-
+const dashboardRoutes = require("./routes/dashboard");
 // Test protected route
 app.get("/api/protected", authenticate, (req, res) => {
   res.json({ message: `Hello user ${req.user.id}`, user: req.user });
@@ -35,6 +35,7 @@ app.use("/api", chatbotRoutes);
 app.use("/api", leaderboardRoutes);
 app.use("/api", aiIntegrationRoutes);
 app.use("/api/quiz", quizChallengeRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 
 // Create HTTP server and initialize Socket.IO
