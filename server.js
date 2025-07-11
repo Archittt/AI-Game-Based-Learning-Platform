@@ -47,7 +47,7 @@ const io = new Server(server, {
 });
 
 // Socket.IO event handlers
-io.on("connection", (socket) => {
+/*io.on("connection", (socket) => {
   console.log(" New client connected:", socket.id);
 
   socket.on("join", (userId) => {
@@ -73,7 +73,21 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(" Client disconnected:", socket.id);
   });
-});
+});*/
+
+const chatHandler = require('./sockets/chatSocket');
+const gameHandler = require('./sockets/gameSocket');
+const notifyHandler = require('./sockets/notifySocket');
+
+// Namespaces
+const chatNamespace = io.of('/chat');
+const gameNamespace = io.of('/game');
+const notifyNamespace = io.of('/notifications');
+
+// Use handlers
+chatNamespace.on('connection', chatHandler);
+gameNamespace.on('connection', gameHandler);
+notifyNamespace.on('connection', notifyHandler);
 
 //Export io to use in routes 
 app.set('io', io);

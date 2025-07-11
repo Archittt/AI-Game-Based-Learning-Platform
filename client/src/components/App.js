@@ -5,7 +5,7 @@ import Leaderboard from "./Leaderboard";
 function App() {
   return (
     <div>
-        <h1>My Game</h1>
+        <h1>Gamified Learning Dashboard</h1>
       <Leaderboard />
     </div>
   );

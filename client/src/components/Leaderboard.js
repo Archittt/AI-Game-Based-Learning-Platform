@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
-import socket from "./socket";
+//import socket from "./socket";
+import { gameSocket } from "./socket";
 
 const Leaderboard = () => {
   const [scores, setScores] = useState([]);
@@ -14,6 +15,7 @@ const Leaderboard = () => {
     });
 
     return () => socket.off("leaderboard-update");
+    gameSocket.disconnect();
   }, []);
 
   return (
