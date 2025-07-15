@@ -1,198 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher - My Students</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            background: #f9fafb;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher - My Students</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9fafb;
+    }
 
-        .header {
-            background: linear-gradient(to right, #4ade80, #059669);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-            border-radius: 0 0 20px 20px;
-        }
+    .header {
+      background: linear-gradient(to right, #4ade80, #059669);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+      border-radius: 0 0 20px 20px;
+    }
 
-        .header h1 {
-            margin: 0;
-            font-size: 30px;
-        }
+    .header h1 {
+      margin: 0;
+      font-size: 30px;
+    }
 
-        .main {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
+    .main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-        }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
 
-        .card {
-            background: white;
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.2s ease;
-        }
+    .card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
 
-        .card:hover {
-            transform: translateY(-4px);
-        }
+    .card:hover {
+      transform: translateY(-4px);
+    }
 
-        .card img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
+    .card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
 
-        .card h3 {
-            margin: 5px 0;
-            color: #111827;
-        }
+    .card h3 {
+      margin: 5px 0;
+      color: #111827;
+    }
 
-        .card p {
-            margin: 3px 0;
-            color: #4b5563;
-        }
+    .card p {
+      margin: 3px 0;
+      color: #4b5563;
+    }
 
-        .low-score {
-            color: #dc2626;
-            font-weight: bold;
-        }
+    .low-score {
+      color: #dc2626;
+      font-weight: bold;
+    }
 
-        .view-btn {
-            margin-top: 10px;
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
+    .view-btn {
+      margin-top: 10px;
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-        .view-btn:hover {
-            background: #047857;
-        }
-    </style>
+    .view-btn:hover {
+      background: #047857;
+    }
+  </style>
 </head>
-
 <body>
 
-    <div class="header">
-        <h1>👩‍🏫 Wellcome Teacher</h1>
-        <p>Click "View Details" to explore student performance</p>
-    </div>
+  <div class="header">
+    <h1>👩‍🏫 Welcome Teacher</h1>
+    <p>Click "View Details" to explore student performance</p>
+  </div>
 
-    <div class="main">
-        <div class="grid">
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Princess" alt="Priya">
-                <h3>Priya Sharma</h3>
-                <p>Grade: 6</p>
-                <p>Avg Score: 72%</p>
-                <p class="low-score">⚠ At Risk</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/big-smile/svg?seed=Leo" alt="Leo">
-                <h3>Leo Singh</h3>
-                <p>Grade: 5</p>
-                <p>Avg Score: 68%</p>
-                <p class="low-score">⚠ At Risk</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/micah/svg?seed=Zara" alt="Zara">
-                <h3>Zara Khan</h3>
-                <p>Grade: 7</p>
-                <p>Avg Score: 87%</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=$1'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Kabir" alt="Kabir">
-                <h3>Kabir Mehta</h3>
-                <p>Grade: 6</p>
-                <p>Avg Score: 53%</p>
-                <p class="low-score">⚠ At Risk</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Saanvi" alt="Saanvi">
-                <h3>Saanvi Roy</h3>
-                <p>Grade: 9</p>
-                <p>Avg Score: 94%</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Om" alt="Om">
-                <h3>Om Desai</h3>
-                <p>Grade: 8</p>
-                <p>Avg Score: 74%</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/big-ears/svg?seed=Aisha" alt="Aisha">
-                <h3>Aisha Verma</h3>
-                <p>Grade: 7</p>
-                <p>Avg Score: 59%</p>
-                <p class="low-score">⚠ At Risk</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Anaya" alt="Anaya">
-                <h3>Anaya Dutta</h3>
-                <p>Grade: 6</p>
-                <p>Avg Score: 81%</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Princess" alt="Priya">
-                <h3>Priya Sharma</h3>
-                <p>Grade: 6</p>
-                <p>Avg Score: 72%</p>
-                <p class="low-score">⚠ At Risk</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/big-ears-neutral/svg?seed=Warrior" alt="Aryan">
-                <h3>Aryan Joshi</h3>
-                <p>Grade: 8</p>
-                <p>Avg Score: 82%</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-            <div class="card">
-                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Fairy" alt="Riya">
-                <h3>Riya Patel</h3>
-                <p>Grade: 7</p>
-                <p>Avg Score: 91%</p>
-                <button class="view-btn" onclick="window.location.href='student-detail.html?student=Leo'">View
-                    Details</button>
-            </div>
-        </div>
+  <div class="main">
+    <div class="grid" id="student-grid">
+      <!-- Student cards will be injected here -->
     </div>
+  </div>
+
+  <script>
+    async function loadStudents() {
+      //const token = localStorage.getItem('token'); // or sessionStorage.getItem('token')
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZmNzg3MDU0MTQ2NmRjYTVkMTBlOWEiLCJyb2xlIjoidGVhY2hlciIsImlhdCI6MTc1MjYwMDkwMCwiZXhwIjoxNzUzMjA1NzAwfQ.pHe201JGL1ea8Z6956CT8KMPv_pYW75HQSThF0IdEKA"; // or sessionStorage.getItem('token')
+      if (!token) {
+        alert("User not authenticated. Please log in.");
+        return;
+      }
+
+      try {
+        const res = await fetch('http://localhost:5000/api/dashboard/students', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch students');
+        }
+
+        const students = await res.json();
+        const grid = document.getElementById('student-grid');
+        grid.innerHTML = ''; // Clear any existing content
+
+        students.forEach(student => {
+          const atRisk = student.avgScore < 70;
+          const avatarSeed = encodeURIComponent(student.name.split(" ")[0]);
+
+          const card = document.createElement('div');
+          card.className = 'card';
+
+          card.innerHTML = `
+            <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=${avatarSeed}" alt="${student.name}">
+            <h3>${student.name}</h3>
+            <p>Grade: ${student.grade}</p>
+            <p>Avg Score: ${student.avgScore}%</p>
+            ${atRisk ? '<p class="low-score">⚠ At Risk</p>' : ''}
+            <button class="view-btn" onclick="window.location.href='student-detail.html?student=${student.id}'">
+              View Details
+            </button>
+          `;
+
+          grid.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error(err);
+        alert('Could not load students. Make sure you are authenticated.');
+      }
+    }
+
+    window.onload = loadStudents;
+  </script>
 
 </body>
-
 </html>
