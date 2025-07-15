@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Detail - Teacher View</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f3f4f6; }
+    .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+    .profile, .module, .intervention, .report-controls { background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px; margin-bottom: 20px; }
+    .profile { display: flex; align-items: center; gap: 20px; }
+    .profile img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; }
+    .profile-info h2 { margin: 0; font-size: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    h3 { margin-top: 0; color: #111827; }
+    .module-item { border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; }
+    .chart, .challenge-list { background: #fff; padding: 16px; border-radius: 10px; margin-bottom: 20px; }
+    .challenge-list table { width: 100%; border-collapse: collapse; }
+    .challenge-list th, .challenge-list td { border-bottom: 1px solid #e5e7eb; padding: 10px; text-align: left; }
+    .intervention p { margin: 8px 0; }
+    .intervention .flag { color: #dc2626; font-weight: bold; }
+    .report-controls input[type="checkbox"] { margin-right: 6px; }
+    .report-controls input[type="date"] { padding: 6px; border: 1px solid #ccc; border-radius: 4px; margin-right: 10px; }
+    .download-btn { background: #10b981; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+    .download-btn:hover { background: #047857; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Student Profile -->
+    <div class="profile">
+      <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Princess" alt="Profile">
+      <div class="profile-info">
+        <h2>Priya Sharma</h2>
+        <p>Grade: 6</p>
+        <p>Overall Avg Score: 72%</p>
+      </div>
+    </div>
+
+    <!-- Module Breakdown -->
+    <div class="module">
+      <h3>Module Performance</h3>
+      <div class="grid">
+        <div class="module-item">
+          <strong>AI Basics</strong>
+          <p>Quiz Avg: 80%</p>
+          <p>Time Spent: 1h 30m</p>
+          <p>Challenges: 4/5</p>
+        </div>
+        <div class="module-item">
+          <strong>Neural Networks</strong>
+          <p>Quiz Avg: 45%</p>
+          <p>Time Spent: 1h 5m</p>
+          <p>Challenges: 2/5</p>
+        </div>
+        <div class="module-item">
+          <strong>Ethics in AI</strong>
+          <p>Quiz Avg: 90%</p>
+          <p>Time Spent: 40m</p>
+          <p>Challenges: 3/3</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Breakdown -->
+    <div class="chart">
+      <h3>Quiz Breakdown</h3>
+      <p>[Pie/Bar Chart Placeholder – Correct vs. Incorrect Answers by Concept]</p>
+    </div>
+
+    <!-- Challenges -->
+    <div class="challenge-list">
+      <h3>Recent Challenges</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>Status</th>
+            <th>Attempts</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Chatbot Flow</td><td>Completed</td><td>1</td><td>10</td></tr>
+          <tr><td>Pattern Matching</td><td>Failed</td><td>3</td><td>4</td></tr>
+          <tr><td>Logic Tree</td><td>Completed</td><td>2</td><td>8</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Intervention Panel -->
+    <div class="intervention">
+      <h3>Intervention Alert</h3>
+      <p class="flag">⚠ Avg Score Below Threshold</p>
+      <p>Reason: Avg score &lt; 50%</p>
+      <p>Suggested Action: Extra practice on neural networks</p>
+    </div>
+
+    <!-- Report Controls -->
+    <div class="report-controls">
+      <h3>Report Controls</h3>
+      <p>
+        From: <input type="date"> To: <input type="date">
+      </p>
+      <p>
+        <label><input type="checkbox"> Avg Score</label>
+        <label><input type="checkbox"> Total Time</label>
+        <label><input type="checkbox"> Avg Quiz Score</label>
+        <label><input type="checkbox"> Challenges Completed</label>
+      </p>
+      <button class="download-btn" onclick="alert('Download started')">Download Report</button>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f3f4f6;
+    }
+    .header {
+      background: linear-gradient(to right, #10b981, #059669);
+      color: white;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .header .left {
+      text-align: left;
+    }
+    .header h1 {
+      font-size: 30px;
+      margin: 0 0 5px;
+    }
+    .header p {
+      font-size: 16px;
+      margin: 0;
+    }
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    .switch-ward {
+      background: white;
+      color: #059669;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .switch-ward:hover {
+      background-color: #d1fae5;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+      z-index: 1;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .dropdown-content button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      background: white;
+      color: #111827;
+      text-align: left;
+      cursor: pointer;
+    }
+    .dropdown-content button:hover {
+      background-color: #f0fdf4;
+    }
+    .dropdown.show .dropdown-content {
+      display: block;
+    }
+    .main {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+    .student-info {
+      max-width: 1000px;
+      margin: 30px auto 0;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .student-info img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .student-info h2 {
+      margin: 0 0 5px;
+      font-size: 22px;
+      color: #111827;
+    }
+    .student-info p {
+      margin: 0;
+      font-size: 15px;
+      color: #4b5563;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 25px;
+      margin-bottom: 24px;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+    }
+    .card h3 {
+      margin-top: 0;
+      color: #111827;
+      font-size: 20px;
+    }
+    .alert {
+      font-weight: bold;
+    }
+    .alert.red {
+      color: #dc2626;
+    }
+    .alert.green {
+      color: #16a34a;
+    }
+    button.general {
+      background-color: #10b981;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    button.general:hover {
+      background-color: #047857;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    .progress-bar {
+      background: #e5e7eb;
+      border-radius: 20px;
+      height: 12px;
+      overflow: hidden;
+      margin: 8px 0 16px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #10b981;
+      width: 80%;
+      transition: width 0.4s ease;
+    }
+    .highlight {
+      background: #ecfdf5;
+      padding: 10px;
+      border-left: 4px solid #10b981;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="left">
+      <h1>Welcome, Parent 👨‍👩‍👧‍👦</h1>
+      <p>Tracking progress for your child: <strong id="childName">Priya</strong></p>
+    </div>
+    <div class="dropdown" id="dropdown">
+      <button class="switch-ward" onclick="toggleDropdown()">Switch Ward</button>
+      <div class="dropdown-content">
+        <button onclick="switchStudent('Priya')">Priya</button>
+        <button onclick="switchStudent('Aryan')">Aryan</button>
+        <button onclick="switchStudent('Riya')">Riya</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="student-info">
+    <img id="studentAvatar" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Princess" alt="Student Avatar">
+    <div>
+      <h2>👧 <span id="studentName">Priya</span></h2>
+      <p>Grade: <span id="studentGrade">6</span></p>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <h3>📈 Overall Progress</h3>
+      <p>Modules Completed:</p>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      <p>Average Score: <strong>85%</strong></p>
+      <p class="alert green">No current alerts</p>
+    </div>
+
+    <div class="card">
+      <h3>📚 Recent Activities</h3>
+      <ul>
+        <li>✅ Completed "AI Ethics" module</li>
+        <li>📝 Scored 92% in "Image Recognition" quiz</li>
+        <li>🎥 Watched "How Chatbots Work" video</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>💬 Message From Teacher</h3>
+      <div class="highlight">
+        Priya is doing excellent in pattern recognition. Encourage her to review the new module on neural networks this week.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📥 Download Progress Report</h3>
+      <button class="general" onclick="alert('Downloading report for current student...')">Download PDF</button>
+    </div>
+  </div>
+
+  <script>
+    function toggleDropdown() {
+      document.getElementById("dropdown").classList.toggle("show");
+    }
+
+    function switchStudent(name) {
+      document.getElementById("childName").innerText = name;
+      document.getElementById("studentName").innerText = name;
+      const gradeMap = { Priya: '6', Aryan: '8', Riya: '7' };
+      const avatarMap = {
+        Priya: 'https://api.dicebear.com/7.x/lorelei/svg?seed=Princess',
+        Aryan: 'https://api.dicebear.com/7.x/big-ears-neutral/svg?seed=Warrior',
+        Riya: 'https://api.dicebear.com/7.x/lorelei/svg?seed=Fairy'
+      };
+      document.getElementById("studentGrade").innerText = gradeMap[name] || '-';
+      document.getElementById("studentAvatar").src = avatarMap[name] || 'https://api.dicebear.com/7.x/lorelei/svg?seed=Default';
+      toggleDropdown();
+    }
+
+    window.onclick = function(event) {
+      if (!event.target.matches('.switch-ward')) {
+        const dropdown = document.getElementById("dropdown");
+        if (dropdown.classList.contains('show')) {
+          dropdown.classList.remove("show");
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
