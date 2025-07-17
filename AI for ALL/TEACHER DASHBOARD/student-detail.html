@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Student Detail - Teacher View</title>
   <style>
+    /* your existing styles — unchanged */
     body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f3f4f6; }
     .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
     .profile, .module, .intervention, .report-controls { background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); padding: 20px; margin-bottom: 20px; }
@@ -27,89 +28,151 @@
 </head>
 <body>
   <div class="container">
-    <!-- Student Profile -->
-    <div class="profile">
-      <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Princess" alt="Profile">
-      <div class="profile-info">
-        <h2>Priya Sharma</h2>
-        <p>Grade: 6</p>
-        <p>Overall Avg Score: 72%</p>
-      </div>
-    </div>
-
-    <!-- Module Breakdown -->
-    <div class="module">
+    <div class="profile" id="profile"></div>
+    <div class="module" id="modules">
       <h3>Module Performance</h3>
-      <div class="grid">
-        <div class="module-item">
-          <strong>AI Basics</strong>
-          <p>Quiz Avg: 80%</p>
-          <p>Time Spent: 1h 30m</p>
-          <p>Challenges: 4/5</p>
-        </div>
-        <div class="module-item">
-          <strong>Neural Networks</strong>
-          <p>Quiz Avg: 45%</p>
-          <p>Time Spent: 1h 5m</p>
-          <p>Challenges: 2/5</p>
-        </div>
-        <div class="module-item">
-          <strong>Ethics in AI</strong>
-          <p>Quiz Avg: 90%</p>
-          <p>Time Spent: 40m</p>
-          <p>Challenges: 3/3</p>
-        </div>
-      </div>
+      <div class="grid" id="module-grid"></div>
     </div>
-
-    <!-- Chart Breakdown -->
-    <div class="chart">
+    <div class="chart" id="chart">
       <h3>Quiz Breakdown</h3>
       <p>[Pie/Bar Chart Placeholder – Correct vs. Incorrect Answers by Concept]</p>
     </div>
-
-    <!-- Challenges -->
     <div class="challenge-list">
       <h3>Recent Challenges</h3>
       <table>
         <thead>
-          <tr>
-            <th>Challenge</th>
-            <th>Status</th>
-            <th>Attempts</th>
-            <th>Points</th>
-          </tr>
+          <tr><th>Challenge</th><th>Status</th><th>Attempts</th><th>Points</th></tr>
         </thead>
-        <tbody>
-          <tr><td>Chatbot Flow</td><td>Completed</td><td>1</td><td>10</td></tr>
-          <tr><td>Pattern Matching</td><td>Failed</td><td>3</td><td>4</td></tr>
-          <tr><td>Logic Tree</td><td>Completed</td><td>2</td><td>8</td></tr>
+        <tbody id="challenge-table">
+          <!-- dynamically filled -->
         </tbody>
       </table>
     </div>
-
-    <!-- Intervention Panel -->
-    <div class="intervention">
+    <div class="intervention" id="intervention">
       <h3>Intervention Alert</h3>
-      <p class="flag">⚠ Avg Score Below Threshold</p>
-      <p>Reason: Avg score &lt; 50%</p>
-      <p>Suggested Action: Extra practice on neural networks</p>
     </div>
-
-    <!-- Report Controls -->
     <div class="report-controls">
       <h3>Report Controls</h3>
       <p>
-        From: <input type="date"> To: <input type="date">
+        From: <input type="date" id="dateFrom"> To: <input type="date" id="dateTo">
       </p>
       <p>
-        <label><input type="checkbox"> Avg Score</label>
-        <label><input type="checkbox"> Total Time</label>
-        <label><input type="checkbox"> Avg Quiz Score</label>
-        <label><input type="checkbox"> Challenges Completed</label>
+        <label><input type="checkbox" value="avgScore" checked> Avg Score</label>
+        <label><input type="checkbox" value="totalTime"> Total Time</label>
+        <label><input type="checkbox" value="avgQuizScore"> Avg Quiz Score</label>
+        <label><input type="checkbox" value="challenges"> Challenges Completed</label>
       </p>
-      <button class="download-btn" onclick="alert('Download started')">Download Report</button>
+      <button class="download-btn" onclick="downloadReport()">Download Report</button>
     </div>
   </div>
+
+  <script>
+   // const token = localStorage.getItem('token');
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZmNzg3MDU0MTQ2NmRjYTVkMTBlOWEiLCJyb2xlIjoidGVhY2hlciIsImlhdCI6MTc1MjYwMDkwMCwiZXhwIjoxNzUzMjA1NzAwfQ.pHe201JGL1ea8Z6956CT8KMPv_pYW75HQSThF0IdEKA";
+    const studentId = new URLSearchParams(window.location.search).get("student");
+
+    if (!token || !studentId) {
+      alert("Missing token or student ID");
+    }
+
+    async function loadStudentDetails() {
+      try {
+        const res = await fetch(`http://localhost:5000/api/dashboard/student/${studentId}`, {
+           method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log(res);
+        const { student, progress, quizzes, intervention } = await res.json();
+
+        // Profile section
+        document.getElementById("profile").innerHTML = `
+          <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=${encodeURIComponent(student.name.split(" ")[0])}" alt="${student.name}">
+          <div class="profile-info">
+            <h2>${student.name}</h2>
+            <p>Grade: ${student.grade}</p>
+            <p>Overall Avg Score: ${intervention?.needsHelp ? `<span style="color:red;">Below 50%</span>` : "Above 50%"}</p>
+          </div>
+        `;
+        console.log("progress",progress);
+
+        // Dummy module data simulation (you can map `progress` here if you track module names)
+        const dummyModules = [
+          { name: "AI Basics", quizAvg: 80, timeSpent: "1h 30m", completed: "4/5" },
+          { name: "Neural Networks", quizAvg: 45, timeSpent: "1h 5m", completed: "2/5" },
+          { name: "Ethics in AI", quizAvg: 90, timeSpent: "40m", completed: "3/3" },
+        ];
+        const moduleGrid = document.getElementById("module-grid");
+        dummyModules.forEach(mod => {
+          moduleGrid.innerHTML += `
+            <div class="module-item">
+              <strong>${mod.name}</strong>
+              <p>Quiz Avg: ${mod.quizAvg}%</p>
+              <p>Time Spent: ${mod.timeSpent}</p>
+              <p>Challenges: ${mod.completed}</p>
+            </div>
+          `;
+        });
+
+        // Challenges table (you can use progress or quizzes to simulate this)
+        const table = document.getElementById("challenge-table");
+        progress.slice(0, 3).forEach(ch => {
+          table.innerHTML += `
+            <tr>
+              <td>${ch.module || "Challenge"}</td>
+              <td>${ch.completed ? "Completed" : "Incomplete"}</td>
+              <td>${ch.attempts || 1}</td>
+              <td>${ch.score || 0}</td>
+            </tr>
+          `;
+        });
+
+        // Intervention
+        const interventionDiv = document.getElementById("intervention");
+        if (intervention.needsHelp) {
+          interventionDiv.innerHTML += `
+            <p class="flag">⚠ Avg Score Below Threshold</p>
+            <p>Reason: ${intervention.reason}</p>
+            <p>Suggested Action: ${intervention.suggestion}</p>
+          `;
+        } else {
+          interventionDiv.innerHTML += `<p>No intervention required.</p>`;
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert("Error loading student details");
+      }
+    }
+
+    async function downloadReport() {
+      const selectedMetrics = Array.from(document.querySelectorAll('.report-controls input[type="checkbox"]:checked')).map(cb => cb.value);
+      const dateFrom = document.getElementById("dateFrom").value;
+      const dateTo = document.getElementById("dateTo").value;
+
+      const query = new URLSearchParams();
+      if (dateFrom) query.append("dateFrom", dateFrom);
+      if (dateTo) query.append("dateTo", dateTo);
+      query.append("metrics", selectedMetrics.join(","));
+      query.append("format", "csv");
+
+      const res = await fetch(`http://localhost:5000/api/dashboard/reports/${studentId}?${query.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `report-${studentId}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    loadStudentDetails();
+  </script>
 </body>
 </html>
