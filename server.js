@@ -37,7 +37,7 @@ app.use("/api", aiIntegrationRoutes);
 app.use("/api/quiz", quizChallengeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 //
-app.use("/api/analytics", require("./routes/analyticsRoutes"));
+//app.use("/api/analytics", require("./routes/analyticsRoutes"));
 
 
 

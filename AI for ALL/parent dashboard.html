@@ -155,7 +155,7 @@
     .progress-fill {
       height: 100%;
       background: #10b981;
-      width: 80%;
+      width: 0;
       transition: width 0.4s ease;
     }
     .highlight {
@@ -172,86 +172,128 @@
   <div class="header">
     <div class="left">
       <h1>Welcome, Parent 👨‍👩‍👧‍👦</h1>
-      <p>Tracking progress for your child: <strong id="childName">Priya</strong></p>
+      <p>Tracking progress for your child: <strong id="childName">Loading...</strong></p>
     </div>
     <div class="dropdown" id="dropdown">
       <button class="switch-ward" onclick="toggleDropdown()">Switch Ward</button>
-      <div class="dropdown-content">
-        <button onclick="switchStudent('Priya')">Priya</button>
-        <button onclick="switchStudent('Aryan')">Aryan</button>
-        <button onclick="switchStudent('Riya')">Riya</button>
+      <div class="dropdown-content" id="studentList">
+        <!-- Buttons populated dynamically -->
       </div>
     </div>
   </div>
 
   <div class="student-info">
-    <img id="studentAvatar" src="https://api.dicebear.com/7.x/lorelei/svg?seed=Princess" alt="Student Avatar">
+    <img id="studentAvatar" src="" alt="Student Avatar">
     <div>
-      <h2>👧 <span id="studentName">Priya</span></h2>
-      <p>Grade: <span id="studentGrade">6</span></p>
+      <h2>👧 <span id="studentName">--</span></h2>
+      <p>Grade: <span id="studentGrade">--</span></p>
     </div>
   </div>
 
   <div class="main">
     <div class="card">
       <h3>📈 Overall Progress</h3>
-      <p>Modules Completed:</p>
+      <p>Modules Completed: <span id="modulesCompleted">0</span></p>
       <div class="progress-bar">
-        <div class="progress-fill"></div>
+        <div class="progress-fill" id="progressFill"></div>
       </div>
-      <p>Average Score: <strong>85%</strong></p>
-      <p class="alert green">No current alerts</p>
+      <p>Average Score: <strong id="avgScore">--%</strong></p>
+      <p class="alert" id="alertStatus">Loading...</p>
     </div>
 
     <div class="card">
       <h3>📚 Recent Activities</h3>
-      <ul>
-        <li>✅ Completed "AI Ethics" module</li>
-        <li>📝 Scored 92% in "Image Recognition" quiz</li>
-        <li>🎥 Watched "How Chatbots Work" video</li>
+      <ul id="activityList">
+        <!-- Activities populated dynamically -->
       </ul>
     </div>
 
     <div class="card">
-      <h3>💬 Message From Teacher</h3>
-      <div class="highlight">
-        Priya is doing excellent in pattern recognition. Encourage her to review the new module on neural networks this week.
+      <h3>💬 Message For Student</h3>
+      <div class="highlight" id="teacherNote">
+        <!-- Teacher note populated dynamically -->
       </div>
     </div>
 
     <div class="card">
       <h3>📥 Download Progress Report</h3>
-      <button class="general" onclick="alert('Downloading report for current student...')">Download PDF</button>
+      <button class="general" id="downloadBtn">Download PDF</button>
     </div>
   </div>
 
   <script>
+    const headers = { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODZmODAxYTVhNjdlYmRiYjRjZGUyZjkiLCJyb2xlIjoicGFyZW50IiwiaWF0IjoxNzUyNzM3MjY2LCJleHAiOjE3NTMzNDIwNjZ9.A2UOpuuBe--67W-6tcvUO-eSzEYVPMoSQhbXRmXEqJs`};
+
     function toggleDropdown() {
       document.getElementById("dropdown").classList.toggle("show");
     }
 
-    function switchStudent(name) {
-      document.getElementById("childName").innerText = name;
-      document.getElementById("studentName").innerText = name;
-      const gradeMap = { Priya: '6', Aryan: '8', Riya: '7' };
-      const avatarMap = {
-        Priya: 'https://api.dicebear.com/7.x/lorelei/svg?seed=Princess',
-        Aryan: 'https://api.dicebear.com/7.x/big-ears-neutral/svg?seed=Warrior',
-        Riya: 'https://api.dicebear.com/7.x/lorelei/svg?seed=Fairy'
-      };
-      document.getElementById("studentGrade").innerText = gradeMap[name] || '-';
-      document.getElementById("studentAvatar").src = avatarMap[name] || 'https://api.dicebear.com/7.x/lorelei/svg?seed=Default';
-      toggleDropdown();
-    }
-
-    window.onclick = function(event) {
-      if (!event.target.matches('.switch-ward')) {
-        const dropdown = document.getElementById("dropdown");
-        if (dropdown.classList.contains('show')) {
-          dropdown.classList.remove("show");
-        }
+    async function loadStudents() {
+      try {
+        const res = await fetch('http://localhost:5000/api/dashboard/students', { headers });
+        const students = await res.json();
+        const list = document.getElementById('studentList');
+        list.innerHTML = '';
+        students.forEach(s => {
+          const btn = document.createElement('button');
+          btn.textContent = s.name;
+          btn.onclick = () => switchStudentById(s.id, s.name);
+          list.appendChild(btn);
+        });
+        if (students.length) switchStudentById(students[0].id, students[0].name);
+      } catch (e) {
+        console.error('Failed to load students', e);
       }
     }
+
+    async function switchStudentById(id, name) {
+      try {
+        const res = await fetch(`http://localhost:5000/api/dashboard/student/${id}`, { headers });
+        const data = await res.json();
+
+        document.getElementById('childName').innerText = name;
+        document.getElementById('studentName').innerText = name;
+        document.getElementById('studentGrade').innerText = data.student.grade;
+        document.getElementById('studentAvatar').src = generateAvatar(name);
+
+        const total = data.progress.length;
+        const completed = data.progress.filter(p => p.completed).length;
+        document.getElementById('modulesCompleted').innerText = completed;
+        const percent = total ? ((completed/total)*100).toFixed(0) : 0;
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('avgScore').innerText = total ? (data.progress.reduce((sum, p) => sum + p.score, 0)/total).toFixed(1) + '%' : '--';
+
+        const alertEl = document.getElementById('alertStatus');
+        if (data.intervention.needsHelp) {
+          alertEl.innerText = '⚠️ ' + data.intervention.reason;
+          alertEl.className = 'alert red';
+        } else {
+          alertEl.innerText = '✅ No current alerts';
+          alertEl.className = 'alert green';
+        }
+
+        const activities = data.quizzes.map(q => `📝 Scored ${q.score}/${q.totalQuestions} in module ${q.moduleId.title}`);
+        document.getElementById('activityList').innerHTML = activities.map(a => `<li>${a}</li>`).join('');
+
+        document.getElementById('teacherNote').innerText = data.intervention.suggestion || 'Keep it up!';
+
+        document.getElementById('downloadBtn').onclick = () => window.location.href = `/reports/${id}?format=csv&metrics=avgScore,totalTime,challenges,avgQuizScore,totalQuizzes`;
+
+        toggleDropdown();
+      } catch (e) {
+        console.error('Error switching student', e);
+      }
+    }
+
+    function generateAvatar(name) {
+      const seedMap = { Priya: 'Princess', Aryan: 'Warrior', Riya: 'Fairy' };
+      const seed = seedMap[name] || name;
+      return `https://api.dicebear.com/7.x/lorelei/svg?seed=${seed}`;
+    }
+
+    window.onclick = e => { if (!e.target.matches('.switch-ward')) document.getElementById('dropdown').classList.remove('show'); };
+
+    loadStudents();
   </script>
 
 </body>

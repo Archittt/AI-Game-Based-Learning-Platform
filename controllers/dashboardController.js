@@ -103,7 +103,9 @@ exports.getStudentDetailsWithInterventions = async (req, res) => {
 
     const [progress, quizzes] = await Promise.all([
       GameProgress.find({ userId: student._id }).lean(),
-      QuizAttempt.find({ userId: student._id }).lean(),
+      QuizAttempt.find({ userId: student._id }) 
+      .populate('moduleId', 'title description') // Replace with actual fields in AIModule schema
+      .lean(),
     ]);
 
     const avgScoreResult = await GameProgress.aggregate([
