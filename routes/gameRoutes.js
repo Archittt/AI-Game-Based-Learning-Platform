@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authenticate = require("../middlewares/authenticate");
-const GameProgress = require("../models/GameProgress");
+const GameProgress = require("../models/gameProgress");
 
 router.post("/progress", authenticate, async (req, res) => {
   try {

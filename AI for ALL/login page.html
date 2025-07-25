@@ -107,6 +107,8 @@
     </div>
     
     <script>
+
+        const API_URL = 'http://localhost:3000'; // Update for production
         // Toggle password visibility
         const togglePassword = document.getElementById('toggle-password');
         const passwordInput = document.getElementById('password');
@@ -188,32 +190,41 @@
             return emailRegex.test(email);
         }
         
-        function simulateLogin(email, password) {
-            // Show loading state
-            const loginBtn = document.getElementById('login-button');
-            const originalText = loginBtn.textContent;
-            loginBtn.textContent = 'Logging in...';
-            loginBtn.disabled = true;
-            
-            // Simulate API call delay
-            setTimeout(() => {
-                // For demo purposes, check if it's a test account
-                if (email === 'test@example.com' && password === 'password123') {
-                    // Success - redirect to dashboard (in a real app)
-                    alert('Login successful! Welcome to AI Explorers.');
-                    window.location.href = '#dashboard';
-                } else {
-                    // Failed login
-                    passwordError.textContent = 'Invalid email or password';
-                    passwordError.classList.remove('hidden');
-                    passwordInput.classList.add('error');
-                }
-                
-                // Reset button state
-                loginBtn.textContent = originalText;
-                loginBtn.disabled = false;
-            }, 1500);
-        }
+        async function simulateLogin(email, password) {
+  const loginBtn = document.getElementById('login-button');
+  const originalText = loginBtn.textContent;
+  loginBtn.textContent = 'Logging in...';
+  loginBtn.disabled = true;
+
+  try {
+    const response = await fetch('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('user', JSON.stringify(data.user));
+
+  alert('Login successful! Welcome to AI Explorers.');
+  window.location.href = 'dashboard.html'; // ✅ correct file
+}
+    else  {
+      passwordError.textContent = data.message || 'Invalid email or password';
+      passwordError.classList.remove('hidden');
+      passwordInput.classList.add('error');
+    }
+  } catch (err) {
+    console.error('Login error:', err);
+    passwordError.textContent = 'Network error. Try again.';
+    passwordError.classList.remove('hidden');
+  } finally {
+    loginBtn.textContent = originalText;
+    loginBtn.disabled = false;
+  }
+}
         
         // Clear error when input changes
         emailInput.addEventListener('input', function() {
