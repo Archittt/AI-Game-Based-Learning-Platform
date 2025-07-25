@@ -99,6 +99,6 @@ app.set('io', io);
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 3010;
     server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
