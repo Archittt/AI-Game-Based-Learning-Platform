@@ -5,6 +5,8 @@ import socket from './socket';
 
 function App() {
   const CURRENT_USER_ID = localStorage.getItem('userId'); // Or use context/state
+  const SERVER_URL = "http://localhost:3010"; // or 3010 if using that
+
 
   useEffect(() => {
     // Join user's Socket.IO room

@@ -1,5 +1,5 @@
-/*
-import React, { useEffect, useState } from "react";
+
+/*import React, { useEffect, useState } from "react";
 //import socket from "./socket";
 import { gameSocket } from "../socket/gameSocket";
 
@@ -7,7 +7,7 @@ const Leaderboard = () => {
   const [scores, setScores] = useState([]);
 
   useEffect(() => {
-    socket.on("leaderboard-update", (newScore) => {
+    socket.on("xleaderboard-update", (newScore) => {
       setScores((prev) => {
         const updated = [...prev, newScore];
         return updated.sort((a, b) => b.score - a.score);
@@ -32,7 +32,10 @@ const Leaderboard = () => {
 
 export default Leaderboard;*/
 import React, { useEffect, useState } from "react";
-import { gameSocket } from "../socket/gameSocket";
+//import { gameSocket } from "../socket/gameSocket";
+
+import gameSocket from '../socket/gameSocket'; // ✅ correct
+
 
 const Leaderboard = () => {
   const [scores, setScores] = useState([]);
