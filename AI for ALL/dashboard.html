@@ -435,17 +435,49 @@
 
     </section>
 
-    <script>
-        // Toggle high contrast mode
-        document.getElementById('high-contrast-toggle')?.addEventListener('change', function () {
-            if (this.checked) {
-                document.body.classList.add('high-contrast');
-                document.querySelector('.toggle-dot').style.transform = 'translateX(20px)';
-            } else {
-                document.body.classList.remove('high-contrast');
-                document.querySelector('.toggle-dot').style.transform = 'translateX(0)';
+     <script>
+    // Toggle high contrast mode
+    document.getElementById('high-contrast-toggle')?.addEventListener('change', function () {
+        if (this.checked) {
+            document.body.classList.add('high-contrast');
+            document.querySelector('.toggle-dot').style.transform = 'translateX(20px)';
+        } else {
+            document.body.classList.remove('high-contrast');
+            document.querySelector('.toggle-dot').style.transform = 'translateX(0)';
+        }
+    });
+
+    // 🧠 Load logged-in user info
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
+
+    if (!user || !token) {
+        alert('You must be logged in to view the dashboard.');
+        window.location.href = 'login page.html';
+    } else {
+        // Replace NAME and Grade-- placeholders
+        const nameEls = document.querySelectorAll('p.font-bold');
+        const gradeEls = document.querySelectorAll('p.text-sm.text-gray-500');
+
+        nameEls.forEach(el => {
+            if (el.innerText.trim() === 'NAME') {
+                el.innerText = user.name;
             }
         });
+
+        gradeEls.forEach(el => {
+            if (el.innerText.includes('Grade--')) {
+                el.innerText = `Grade ${user.grade}`;
+            }
+        });
+
+        // Optional: Replace letter icon with user's first initial
+        const initialEls = document.querySelectorAll('.w-12.h-12.rounded-full span, .w-8.h-8.rounded-full span');
+        initialEls.forEach(span => {
+            span.innerText = user.name.charAt(0).toUpperCase();
+        });
+    }
+
 
     </script>
 
