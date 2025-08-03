@@ -38,8 +38,7 @@ This project explores how AI-driven game environments can support learning by:
 ## 🛠️ Prerequisites
 
 - [Node.js](https://nodejs.org/) v14+ and NPM  
-- Python 3.x  
-- [Unity / Phaser / Godot] (whichever engine is used)
+- Python 3 (For AIML Backend)
 
 ## ⚙️ Installation
 
