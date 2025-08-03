@@ -45,7 +45,7 @@ This project explores how AI-driven game environments can support learning by:
 ### 🛠 Middleware
 - /middlewares/authenticate.js: Middleware to verify JWT tokens and protect routes.
 
-###🗂️ Controllers
+### 🗂️ Controllers
 - authController.js: Handles login, registration, and JWT issuance.
 - aiModuleController.js: Manages AI module-related logic.
 - dashboardController.js: Logic for populating user dashboard data.
@@ -56,7 +56,7 @@ This project explores how AI-driven game environments can support learning by:
   - outcomesController.js – Manages learning outcomes
   - progressController.js – Tracks user/module progress
 
-###🧠 Models
+### 🧠 Models
 - userModel.js – User details and credentials
 - AlModule.js – Stores AI learning modules
 - ChatSession.js – History of user-AI chats
@@ -89,7 +89,7 @@ This project explores how AI-driven game environments can support learning by:
 ### 🔧 Utilities
 - jwtUtils.js → JWT token creation and verification
 
-###🌐 Frontend
+### 🌐 Frontend
 - /AI for All/: Contains the client-side code (HTML, CSS, JavaScript), connected to the backend through REST APIs and WebSockets.
 
 
