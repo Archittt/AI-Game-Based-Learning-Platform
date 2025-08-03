@@ -22,11 +22,15 @@ This project explores how AI-driven game environments can support learning by:
 ## 📁 Repository Structure
 
 ```
-/assets/ — images, levels, game data
-/src/ — source code (AI logic, game engine, UI)
-/tests/ — unit and integration tests
-/examples/ — demo scenarios and usage scripts
-/docker/ — optional containerization files
+/AI for All/ — Frontend Files
+/controllers/
+/middlewares/
+/models/ — All the schemas
+/routes/ — All the APIs
+/socket/
+/utils/
+/db.js
+/server.js
 /README.md — this file
 ```
 
@@ -76,10 +80,10 @@ npm start       # or python app.py depending on implementation
 - Gamified rewards, badges, and leaderboards
 
 ## 🤝 Contributing
-- Contributions welcome! Feel free to:
+Contributions welcome! Feel free to:
 
--- Open issues for bugs or feature requests
--- Submit pull requests to refine logic or add features
--- Propose educational scenarios or modules
+- Open issues for bugs or feature requests
+- Submit pull requests to refine logic or add features
+- Propose educational scenarios or modules
 
 Please follow the coding style and include tests for new features.
