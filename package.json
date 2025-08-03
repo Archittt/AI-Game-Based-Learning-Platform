@@ -1,9 +1,11 @@
 {
-  "name": "ai-game-based-learning-platform-",
+  "name": "ai-game-based-learning-platform",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "package": "npm install && npm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
