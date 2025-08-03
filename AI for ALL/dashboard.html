@@ -485,14 +485,15 @@
     }
 
     
+    
   document.addEventListener('DOMContentLoaded', async () => {
     const moduleList = document.getElementById('modules-list');
 
     try {
-      const response = await fetch('http://localhost:5000/api/modules');
+      const response = await fetch('http://localhost:3100/api/modules');
       const modules = await response.json();
 
-      moduleList.innerHTML = ''; // clear any placeholder
+      moduleList.innerHTML = '';
 
       modules.forEach(mod => {
         const li = document.createElement('li');
@@ -508,6 +509,8 @@
       moduleList.innerHTML = '<li>Error loading modules</li>';
     }
   });
+
+
 
 
 
