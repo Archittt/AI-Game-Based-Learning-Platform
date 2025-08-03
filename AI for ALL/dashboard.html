@@ -283,6 +283,12 @@
                             </div>
                         </div>
                     </div>
+                    <h3 class="font-bold mb-4">📚 Modules</h3>
+                    <ul id="modules-list" class="list-disc pl-5 space-y-2">
+                      <li>Loading modules...</li>
+                    </ul>
+                  </div>
+                </div>
 
                     <div class="card p-4 flex">
                         <div
@@ -477,6 +483,33 @@
             span.innerText = user.name.charAt(0).toUpperCase();
         });
     }
+
+    
+  document.addEventListener('DOMContentLoaded', async () => {
+    const moduleList = document.getElementById('modules-list');
+
+    try {
+      const response = await fetch('http://localhost:5000/api/modules');
+      const modules = await response.json();
+
+      moduleList.innerHTML = ''; // clear any placeholder
+
+      modules.forEach(mod => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = mod.pdfUrl;
+        link.textContent = mod.title;
+        link.target = '_blank';
+        li.appendChild(link);
+        moduleList.appendChild(li);
+      });
+
+    } catch (err) {
+      moduleList.innerHTML = '<li>Error loading modules</li>';
+    }
+  });
+
+
 
 
     </script>

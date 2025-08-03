@@ -36,6 +36,7 @@ app.use("/api", leaderboardRoutes);
 app.use("/api", aiIntegrationRoutes);
 app.use("/api/quiz", quizChallengeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use('/api/modules', require('./routes/modules'));
 //app.use("/api/analytics", require("./routes/analyticsRoutes"));
 
 
