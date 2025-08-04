@@ -22,6 +22,7 @@ This project explores how AI-driven game environments can support learning by:
 ## 📁 Repository Structure
 
 ```
+/client/                   --> React Files
 /AI for All/               --> All Frontend Files (HTML/CSS/JS)
 /controllers/              --> Business logic for each route
 /controllers/Analytics/    --> Analytics-specific controllers
