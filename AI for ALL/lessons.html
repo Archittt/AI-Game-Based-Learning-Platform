@@ -376,6 +376,7 @@
                                     <span class="text-xs text-gray-500">5 lessons (2 hrs)</span>
                                 </div>
                                 <button class="text-primary text-sm font-semibold">Start</button>
+                    
                             </div>
                         </div>
 
@@ -640,7 +641,7 @@
                                 <span
                                     class="bg-purple-100 text-purple text-xs font-semibold px-2.5 py-0.5 rounded">Advanced</span>
                             </div>
-                            <h3 class="font-bold text-lg mb-1">Reinforcement Learning</h3>
+                            <h3 class="font-bold text-lg mb-1">Modules</h3>
                             <p class="text-gray-600 text-sm mb-3">Explore how AI learns through trial and error to
                                 achieve goals.</p>
                             <div class="flex justify-between items-center">
@@ -650,9 +651,14 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <span class="text-xs text-gray-500">10 lessons (5.5 hrs)</span>
+                                    <span class="text-xs text-gray-500"></span>
                                 </div>
-                                <button class="text-primary text-sm font-semibold">Start</button>
+                                <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+                                    <h3 class="font-bold mb-4">📚 Modules</h3>
+                                    <ul id="modules-list" class="list-disc pl-5 space-y-2">
+                                      <li>Loading modules...</li>
+                                    </ul>
+                                  </div>
                             </div>
                         </div>
                     </div>
@@ -867,6 +873,33 @@
                 button.classList.add('active');
             });
         });
+
+        
+  document.addEventListener('DOMContentLoaded', async () => {
+    const moduleList = document.getElementById('modules-list');
+
+    try {
+      const response = await fetch('http://localhost:3011/api/modules');
+      const modules = await response.json();
+
+      moduleList.innerHTML = '';
+
+      modules.forEach(mod => {
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+        link.href = mod.pdfUrl;
+        link.textContent = mod.title;
+        link.target = '_blank';
+        li.appendChild(link);
+        moduleList.appendChild(li);
+      });
+
+    } catch (err) {
+      moduleList.innerHTML = '<li>Error loading modules</li>';
+    }
+  });
+
+
     </script>
 </body>
 
